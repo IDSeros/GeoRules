@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Geolocalización con Leaflet y Nominatim</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<style>
+  #map { height: 400px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<h2>Mi ubicación</h2>
+<p id="status">Obteniendo ubicación...</p>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+//---------------------------------------------------------------------------------------------------------------------------
+
+async function initMap(lat, lon, direccion) {
+    const locationList = [{lat: 25.62838011058238, lon: -100.30402303520061}, {lat: 25.651100767545586, lon: -100.26618896222656}, {lat: 25.63027923400895, lon: -100.30287950319702}];
+    const locationAddress = [{name: ''}];
+    const map = L.map('map').setView([lat, lon], 20); //Coordenadas y 'Zoom' en el mapa
+
+    // Capa de mapa base (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    for (const l of locationList) {
+        if(getDistanceFromLatLonInKm(l.lat, l.lon, lat, lon) <= 7){
+            const nombreDireccion = await justGetAddres(l.lat, l.lon);
+            console.log(nombreDireccion);
+            if (nombreDireccion){
+                L.marker([l.lat, l.lon])
+                    .addTo(map)
+                    .bindPopup(`${nombreDireccion}`);
+            }
+        }
+    };
+
+    for (const l of locationAddress) {
+        const coordinates = await getLatLon(locationAddress.name);
+        if(getDistanceFromLatLonInKm(coordinates.lat, coordinates.lon, lat, lon) <= 7){
+            console.log(locationAddress.name);
+            if (coordinates.lat){
+                L.marker([coordinates.lat, coordinates.lon])
+                .addTo(map)
+                .bindPopup(`Sí jala`);
+            }
+        }
+    }
+
+    // Marcador con dirección
+    L.marker([lat, lon])
+      .addTo(map)
+      .bindPopup(`<b>Estás aquí</b><br>${direccion}`)
+      .openPopup();
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+async function justGetAddres(lat, lon) {
+    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=es`, {
+        headers: {
+            'User-Agent': 'GeoRules/1.0'
+        }
+    })
+    const data = await res.json();
+
+    return data.display_name || "Dirección no encontrada";
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+async function getLatLon(direccion) {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(direccion)}&format=json&limit=1&viewbox=-101.5,27.7,-98.2,23.9&bounded=1`, {
+        headers: {
+            'User-Agent' : 'GeoRules/1.0'
+        }
+    })
+    const data = await res.json();
+
+    console.log(`Latitude: ${data[0].lat}, Longitude: ${data[0].lon}`)
+
+    return {lat: data[0].lat, lon: data[0].lon};
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+async function getAddress(lat, lon) {
+    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=es`, {
+        headers: {
+            'User-Agent': 'GeoRules/1.0'
+        }
+    })
+    const data = await res.json();
+    document.getElementById("status").textContent = `Ubicación: ${data.display_name}`;
+    initMap(lat, lon, data.display_name); //Llamado a initMap
+
+    /*.then(res => res.json())
+    .then(data => {
+        const direccion = data.display_name || "Dirección no encontrada";
+        document.getElementById("status").textContent = `Ubicación: ${direccion}`;
+        initMap(lat, lon, direccion); //Llamado a initMap
+    })
+    .catch(err => {
+        document.getElementById("status").textContent = "Error al obtener dirección";
+        console.error(err);
+    });*/
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+        pos => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            getAddress(lat, lon); //Llamado a getAddress
+        },
+        err => {
+            document.getElementById("status").textContent = "Error: " + err.message;
+        }
+    );
+} else {
+    document.getElementById("status").textContent = "Geolocalización no soportada en este navegador.";
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  console.log(d);
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+</script>
+</body>
+</html>
