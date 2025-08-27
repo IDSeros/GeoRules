@@ -3,6 +3,14 @@
 async function initMap(lat, lon, direccion) {
     const locationList = [{lat: 25.62838011058238, lon: -100.30402303520061}, {lat: 25.651100767545586, lon: -100.26618896222656}, {lat: 25.63027923400895, lon: -100.30287950319702}];
     const locationAddress = [{name: 'Paseo del Acueducto 4366, Laderas del Mirador, 64765 Monterrey, Nuevo León'},{name: 'Mauritania, Laderas del Mirador, 64765 Monterrey, Nuevo León'}];
+    //Formato Visual de los marcadores en el mapa
+    const redIcon = new L.Icon({
+        iconUrl: 'redMarkerIcon.png',
+        iconSize: [45, 46],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34]
+    });
+
     const map = L.map('map').setView([lat, lon], 20); //Coordenadas y 'Zoom' en el mapa
 
     // Capa de mapa base (OpenStreetMap)
@@ -11,7 +19,7 @@ async function initMap(lat, lon, direccion) {
     }).addTo(map);
 
     // Marcador con dirección actual
-    L.marker([lat, lon])
+    L.circleMarker([lat, lon], {radius : 15, weight : 4})
       .addTo(map)
       .bindPopup(`<b>Estás aquí</b><br>${direccion}`)
       .openPopup();
@@ -21,7 +29,7 @@ async function initMap(lat, lon, direccion) {
             const nombreDireccion = await justGetAddres(l.lat, l.lon);
             console.log(nombreDireccion);
             if (nombreDireccion){
-                L.marker([l.lat, l.lon])
+                L.marker([l.lat, l.lon], {icon : redIcon})
                     .addTo(map)
                     .bindPopup(`${nombreDireccion}`);
             }
@@ -33,7 +41,7 @@ async function initMap(lat, lon, direccion) {
         if(getDistanceFromLatLonInKm(coordinates.lat, coordinates.lon, lat, lon) <= 7){
             console.log(l.name);
             if (coordinates.lat){
-                L.marker([coordinates.lat, coordinates.lon])
+                L.marker([coordinates.lat, coordinates.lon], {icon : redIcon})
                 .addTo(map)
                 .bindPopup(`${l.name}`);
             }
