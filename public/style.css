@@ -1,0 +1,20 @@
+/* Estilo general */
+#map {
+  width: 100%;        /* Ocupar todo el ancho disponible */
+  height: 80vh;       /* Altura relativa a la pantalla (80% de la ventana) */
+  margin-top: 10px;
+  border-radius: 10px; /* opcional: bordes redondeados */
+}
+
+/* Ajustes para móviles */
+@media (max-width: 768px) {
+  #map {
+    height: 60vh;   /* Más compacto en pantallas pequeñas */
+  }
+}
+
+@media (max-width: 480px) {
+  #map {
+    height: 50vh;   /* En pantallas muy pequeñas, todavía más compacto */
+  }
+}
