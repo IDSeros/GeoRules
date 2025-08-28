@@ -97,7 +97,7 @@ async function getAddress(lat, lon) {
 //---------------------------------------------------------------------------------------------------------------------------
 
 if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(
+    navigator.geolocation.watchPosition(
         pos => {
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
@@ -106,6 +106,11 @@ if ("geolocation" in navigator) {
         },
         err => {
             document.getElementById("status").textContent = "Error: " + err.message;
+        },
+        {
+            enableHighAccuracy: true, // Usa GPS si está disponible
+            maximumAge: 0,            // No reutiliza posiciones en caché
+            timeout: 5000             // Tiempo máximo de espera por actualización
         }
     );
 } else {
