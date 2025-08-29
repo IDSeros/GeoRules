@@ -42,6 +42,12 @@
   box-shadow: inset 0 0 10px rgb(129, 127, 127);
 }
 
+#addressPanel {
+  padding-left: 10%;
+  padding-right: 10%;
+  font-size: 30px;
+}
+
 /* Ajustes para móviles */
 @media (max-width: 768px) {
   #map {

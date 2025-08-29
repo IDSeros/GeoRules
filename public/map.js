@@ -49,7 +49,7 @@ async function initMap(lat, lon, direccion) {
                 // Evento de click para mostrar en panel
                 marker.on("click", () => {
                     document.getElementById("panelTitle").textContent = marker.info.name;
-                    document.getElementById("panelContent").textContent = marker.info.address;
+                    document.getElementById("addressPanel").textContent = marker.info.address;
                     document.getElementById("infoPanel").style.display = "block";
                 });
             }
@@ -67,7 +67,7 @@ async function justGetAddres(lat, lon) {
     }
     const data = await res.json();
 
-    return data.display_address || "Dirección no encontrada";
+    return data.display_name || "Dirección no encontrada";
 }
 
 //---------------------------------------------------------------------------------------------------------------------------
@@ -98,8 +98,10 @@ async function getAddress(lat, lon) {
     }
     
     const data = await res.json();
-    document.getElementById("status").textContent = `Ubicación: ${data.display_address}`;
-    initMap(lat, lon, data.display_address); //Llamado a initMap
+    document.getElementById("status").textContent = `Ubicación: ${data.display_name}`;
+
+    initMap(lat, lon, data.display_name); //Llamado a initMap
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------------
