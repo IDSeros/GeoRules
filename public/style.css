@@ -6,6 +6,42 @@
   border-radius: 10px; /* opcional: bordes redondeados */
 }
 
+#infoPanel {
+  position: fixed;
+  left: 5%;
+  bottom: 0;
+  height: 50%;
+  width: 90%;
+  border-radius: 30px;
+  background-color: white;
+  box-shadow: 0 -2px 80px rgb(139, 139, 139);
+  z-index: 999;
+
+  display: none;
+}
+
+#panelTitle {
+  font-size: 70px;
+  padding-left: 10%;
+}
+
+#closePanel {
+  position: absolute;
+  width: 10%;
+  height: 9%;
+  right: 40px;
+  top: 10px;
+  margin-top: 7%;
+  font-size: 40px;
+  color: rgb(129, 127, 127);
+  border-radius: 80%;
+  justify-content: right;
+  background-color: white;
+  border-color: white;
+  border-width: 3px;
+  box-shadow: inset 0 0 10px rgb(129, 127, 127);
+}
+
 /* Ajustes para móviles */
 @media (max-width: 768px) {
   #map {

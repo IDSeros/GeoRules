@@ -2,16 +2,16 @@
 
 async function initMap(lat, lon, direccion) {
     const locationList = [{lat: 25.62838011058238, lon: -100.30402303520061}, {lat: 25.651100767545586, lon: -100.26618896222656}, {lat: 25.63027923400895, lon: -100.30287950319702}];
-    const locationAddress = [{name: 'Paseo del Acueducto 4366, Laderas del Mirador, 64765 Monterrey, Nuevo León'},{name: 'Mauritania, Laderas del Mirador, 64765 Monterrey, Nuevo León'}, {name: 'Av. Eugenio Garza Sada 4321, Contry, 64860 Monterrey, Nuevo León'}];
+    const locationAddress = [{name: '7-Eleven', address: 'Paseo del Acueducto 4366, Laderas del Mirador, 64765 Monterrey, Nuevo León'},{name: 'Iglesia San Nicolás de Bari',address: 'Mauritania, Laderas del Mirador, 64765 Monterrey, Nuevo León'}, {name: 'H-E-B',address: 'Av. Eugenio Garza Sada 4321, Contry, 64860 Monterrey, Nuevo León'}];
     //Formato Visual de los marcadores en el mapa
     const redIcon = new L.Icon({
         iconUrl: 'redMarkerIcon.png',
-        iconSize: [45, 46],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34]
+        iconSize: [100, 100],   // tamaño grande
+        iconAnchor: [50, 100],  // mitad ancho, base abajo
+        popupAnchor: [0, -100]
     });
 
-    const map = L.map('map').setView([lat, lon], 20); //Coordenadas y 'Zoom' en el mapa
+    const map = L.map('map').setView([lat, lon], 50); //Coordenadas y 'Zoom' en el mapa
 
     // Capa de mapa base (OpenStreetMap)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -19,7 +19,7 @@ async function initMap(lat, lon, direccion) {
     }).addTo(map);
 
     // Marcador con dirección actual
-    L.circleMarker([lat, lon], {radius : 15, weight : 4})
+    L.circleMarker([lat, lon], {radius : 30, weight : 4})
       .addTo(map)
       .bindPopup(`<b>Estás aquí</b><br>${direccion}`)
       .openPopup();
@@ -37,13 +37,21 @@ async function initMap(lat, lon, direccion) {
     };
 
     for (const l of locationAddress) {
-        const coordinates = await getLatLon(l.name);
+        const coordinates = await getLatLon(l.address);
         if(getDistanceFromLatLonInKm(coordinates.lat, coordinates.lon, lat, lon) <= 7){
-            console.log(l.name);
+            console.log(l.address);
             if (coordinates.lat){
                 L.marker([coordinates.lat, coordinates.lon], {icon : redIcon})
                 .addTo(map)
-                .bindPopup(`${l.name}`);
+
+                marker.info = l;
+
+                // Evento de click para mostrar en panel
+                marker.on("click", () => {
+                    document.getElementById("panelTitle").textContent = marker.info.name;
+                    document.getElementById("panelContent").textContent = marker.info.address;
+                    document.getElementById("infoPanel").style.display = "block";
+                });
             }
         }
     }
@@ -59,7 +67,7 @@ async function justGetAddres(lat, lon) {
     }
     const data = await res.json();
 
-    return data.display_name || "Dirección no encontrada";
+    return data.display_address || "Dirección no encontrada";
 }
 
 //---------------------------------------------------------------------------------------------------------------------------
@@ -90,8 +98,8 @@ async function getAddress(lat, lon) {
     }
     
     const data = await res.json();
-    document.getElementById("status").textContent = `Ubicación: ${data.display_name}`;
-    initMap(lat, lon, data.display_name); //Llamado a initMap
+    document.getElementById("status").textContent = `Ubicación: ${data.display_address}`;
+    initMap(lat, lon, data.display_address); //Llamado a initMap
 }
 
 //---------------------------------------------------------------------------------------------------------------------------
@@ -136,4 +144,10 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 
 function deg2rad(deg) {
   return deg * (Math.PI/180)
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+function closePanel() {
+  document.getElementById("infoPanel").style.display = "none";
 }
