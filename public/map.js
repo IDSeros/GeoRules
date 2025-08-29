@@ -41,7 +41,7 @@ async function initMap(lat, lon, direccion) {
         if(getDistanceFromLatLonInKm(coordinates.lat, coordinates.lon, lat, lon) <= 7){
             console.log(l.address);
             if (coordinates.lat){
-                L.marker([coordinates.lat, coordinates.lon], {icon : redIcon})
+                const marker = L.marker([coordinates.lat, coordinates.lon], {icon : redIcon})
                 .addTo(map)
 
                 marker.info = l;
