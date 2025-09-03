@@ -13,9 +13,10 @@ async function initMap(lat, lon, direccion) {
 
     const map = L.map('map').setView([lat, lon], 50); //Coordenadas y 'Zoom' en el mapa
 
-    // Capa de mapa base (OpenStreetMap)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+    // Capa de mapa base (OpenStreetMap): https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
+    // Capa de mapa base (Carto)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
     }).addTo(map);
 
     // Marcador con dirección actual
