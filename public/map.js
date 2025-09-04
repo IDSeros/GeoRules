@@ -2,7 +2,7 @@
 
 async function initMap(lat, lon, direccion) {
     const locationList = [{lat: 25.62838011058238, lon: -100.30402303520061}, {lat: 25.651100767545586, lon: -100.26618896222656}, {lat: 25.63027923400895, lon: -100.30287950319702}];
-    const locationAddress = [{name: '7-Eleven', address: 'Paseo del Acueducto 4366, Laderas del Mirador, 64765 Monterrey, Nuevo León'},{name: 'Iglesia San Nicolás de Bari',address: 'Mauritania, Laderas del Mirador, 64765 Monterrey, Nuevo León'}, {name: 'H-E-B',address: 'Av. Eugenio Garza Sada 4321, Contry, 64860 Monterrey, Nuevo León'}];
+    const locationAddress = [{name: '7-Eleven', address: 'Paseo del Acueducto 4366, Laderas del Mirador, 64765 Monterrey, Nuevo León', establishment: "Tienda de Conveniencia", numExtinguisher: 1, firstAid: true, sprinklers: false, emergncyExits: 1, lastInspection: "27/08/2025", accessibility: "Puerta Corrediza - Rampa en Entrada Principal"},{name: 'Iglesia San Nicolás de Bari',address: 'Mauritania, Laderas del Mirador, 64765 Monterrey, Nuevo León'}, {name: 'H-E-B',address: 'Av. Eugenio Garza Sada 4321, Contry, 64860 Monterrey, Nuevo León'}];
     //Formato Visual de los marcadores en el mapa
     const redIcon = new L.Icon({
         iconUrl: 'redMarkerIcon.png',
@@ -26,7 +26,7 @@ async function initMap(lat, lon, direccion) {
       .openPopup();
 
     for (const l of locationList) {
-        if(getDistanceFromLatLonInKm(l.lat, l.lon, lat, lon) <= 7){
+        if(getDistanceFromLatLonInKm(l.lat, l.lon, lat, lon) <= 5){
             const nombreDireccion = await justGetAddres(l.lat, l.lon);
             console.log(nombreDireccion);
             if (nombreDireccion){
@@ -39,7 +39,7 @@ async function initMap(lat, lon, direccion) {
 
     for (const l of locationAddress) {
         const coordinates = await getLatLon(l.address);
-        if(getDistanceFromLatLonInKm(coordinates.lat, coordinates.lon, lat, lon) <= 7){
+        if(getDistanceFromLatLonInKm(coordinates.lat, coordinates.lon, lat, lon) <= 5){
             console.log(l.address);
             if (coordinates.lat){
                 const marker = L.marker([coordinates.lat, coordinates.lon], {icon : redIcon})
@@ -51,6 +51,16 @@ async function initMap(lat, lon, direccion) {
                 marker.on("click", () => {
                     document.getElementById("panelTitle").textContent = marker.info.name;
                     document.getElementById("addressPanel").textContent = marker.info.address;
+                    document.getElementById("establishmentPanel").textContent = marker.info.establishment;
+                    document.getElementById("extinguishPanel").textContent = (`Extintores: ${marker.info.numExtinguisher}`);
+                    document.getElementById("firstAidPanel").textContent = (`Botiquín de Primeros Auxilios: ${marker.info.firstAid ? "Sí" : "No"}`);
+                    document.getElementById("sprinklerPanel").textContent = (`Rociadores Automáticos: ${marker.info.sprinklers ? "Sí" : "No"}`);
+                    document.getElementById("emergenExitPanel").textContent = (`Salidas de emergencia: ${marker.info.emergncyExits}`);
+                    document.getElementById("inspectionPanel").textContent = (`Última Inspección de Seguridad: ${marker.info.lastInspection} 📆`);
+                    document.getElementById("accessPanel").textContent = (`Características de Accesibilidad: ${marker.info.accessibility}`);
+                    
+                    document.getElementById("infoPanel").classList.remove("hide");
+                    document.getElementById("infoPanel").classList.add("show");
                     document.getElementById("infoPanel").style.display = "block";
                 });
             }
@@ -152,5 +162,15 @@ function deg2rad(deg) {
 //---------------------------------------------------------------------------------------------------------------------------
 
 function closePanel() {
-  document.getElementById("infoPanel").style.display = "none";
+    const infoPanel = document.getElementById("infoPanel");
+
+    infoPanel.classList.remove("show");
+    infoPanel.classList.add("hide");
+
+    //EventListener para esperar a que termine animacion de cierre para esconder el panel
+    infoPanel.addEventListener("animationend", function handler() {
+    infoPanel.style.display = "none";
+    infoPanel.classList.remove("hide");
+    infoPanel.removeEventListener("animationend", handler);
+  });
 }

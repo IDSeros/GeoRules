@@ -18,6 +18,19 @@
   z-index: 999;
 
   display: none;
+  overflow-y: scroll;
+
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+}
+
+#infoPanel.show {
+  display: block;
+  animation-name: slideIn;
+}
+
+#infoPanel.hide {
+  animation-name: slideOut;
 }
 
 #panelTitle {
@@ -43,7 +56,7 @@
   box-shadow: inset 0 0 10px rgb(129, 127, 127);
 }
 
-#addressPanel {
+.info {
   padding-left: 10%;
   padding-right: 10%;
   font-size: 30px;
@@ -59,5 +72,29 @@
 @media (max-width: 480px) {
   #map {
     height: 50vh;   /* En pantallas muy pequeñas, todavía más compacto */
+  }
+}
+
+/*Animaciones para el panel de información*/
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  } 
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
   }
 }
