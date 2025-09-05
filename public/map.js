@@ -11,7 +11,13 @@ async function initMap(lat, lon, direccion) {
         popupAnchor: [0, -100]
     });
 
-    const map = L.map('map').setView([lat, lon], 50); //Coordenadas y 'Zoom' en el mapa
+    const map = L.map('map', {
+        center: [lat, lon],
+        zoom: 15,
+        touchZoom: true,
+        tap: true,
+        zoomControl: true
+    }); //Coordenadas y 'Zoom' en el mapa
 
     // Capa de mapa base (OpenStreetMap): https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png      © OpenStreetMap contributors
     // Capa de mapa base (Carto)
@@ -47,7 +53,7 @@ async function initMap(lat, lon, direccion) {
 
                 marker.info = l;
 
-                // Evento de click para mostrar en panel
+                // Evento de click para mostrar datos en panel
                 marker.on("click", () => {
                     document.getElementById("panelTitle").textContent = marker.info.name;
                     document.getElementById("addressPanel").textContent = marker.info.address;
