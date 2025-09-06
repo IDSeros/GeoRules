@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>GeoRules</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/x-icon" href="GeoRulelogo.png" />
+  </head>
+  <body>
+    <h2>Mi ubicación</h2>
+    <p id="status">Obteniendo ubicación...</p>
+    <div id="map"></div>
+
+    <div id="infoPanel">
+      <h3 id="panelTitle">Detalles</h3>
+      <p class="info" id="addressPanel"></p>
+      <p class="info" id="establishmentPanel"></p>
+      <p class="info" id="extinguishPanel"></p>
+      <p class="info" id="firstAidPanel"></p>
+      <p class="info" id="sprinklerPanel"></p>
+      <p class="info" id="emergenExitPanel"></p>
+      <p class="info" id="inspectionPanel"></p>
+      <p class="info" id="accessPanel"></p>
+      <button id="closePanel" onclick="closePanel()">X</button>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="map.js"></script>
+  </body>
+</html>
