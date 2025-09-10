@@ -2,8 +2,34 @@ import express from "express";
 
 const app = express();
 const PORT = 3000;
+const db = require('./db');
 
 app.use(express.static("public"));
+
+// Endpoint para búsqueda de ubiaciones en la base de datos
+app.get("/api/locations", async (req, res) => {
+  db.query("SELECT * FROM Ubicacion", (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error en la base de datos');
+    }
+
+    const locations = results.map((row) => ({
+      name: row.nombre,
+      address: row.direccion,
+      establishment: row.tipoEstablecimiento,
+      numExtinguisher: row.numExtintores,
+      firstAid: !!row.hayBotiquin,
+      sprinklers: !!row.hayRociadores,
+      emergncyExits: row.numEmergenExits,
+      lastInspection: row.ultimaInspeccion // formato ISO, sin modificar
+    }));
+
+    res.json(locations);
+  });
+});
+
+
 
 // Endpoint para búsqueda directa
 app.get("/api/getLatLon", async (req, res) => {

@@ -2,7 +2,7 @@
 
 async function initMap(lat, lon, direccion) {
     const locationList = [{lat: 25.62838011058238, lon: -100.30402303520061}, {lat: 25.651100767545586, lon: -100.26618896222656}, {lat: 25.63027923400895, lon: -100.30287950319702}];
-    const locationAddress = [{name: '7-Eleven', address: 'Paseo del Acueducto 4366, Laderas del Mirador, 64765 Monterrey, Nuevo León', establishment: "Tienda de Conveniencia", numExtinguisher: 1, firstAid: true, sprinklers: false, emergncyExits: 1, lastInspection: "27/08/2025", accessibility: "Puerta Corrediza - Rampa en Entrada Principal"},{name: 'Iglesia San Nicolás de Bari',address: 'Mauritania, Laderas del Mirador, 64765 Monterrey, Nuevo León'}, {name: 'H-E-B',address: 'Av. Eugenio Garza Sada 4321, Contry, 64860 Monterrey, Nuevo León'}];
+    const locationAddress = await fetch('/api/locations').then(res => res.json());
     //Formato Visual de los marcadores en el mapa
     const redIcon = new L.Icon({
         iconUrl: 'redMarkerIcon.png',
