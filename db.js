@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+import mysql from 'mysql2';
 
 //Datos de Conexión
 const connection = mysql.createConnection({
@@ -16,3 +16,5 @@ connection.connect((err) => {
   }
   console.log('Conectado como id ' + connection.threadId);
 });
+
+export default connection;

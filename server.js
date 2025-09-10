@@ -1,8 +1,8 @@
 import express from "express";
+import db from './db.js';
 
 const app = express();
 const PORT = 3000;
-const db = require('./db');
 
 app.use(express.static("public"));
 
