@@ -1,10 +1,12 @@
 import express from "express";
 import db from './db.js';
+import bcrypt from 'bcrypt';
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.static("public"));
+app.use(express.json());
 
 // Endpoint para búsqueda de ubiaciones en la base de datos
 app.get("/api/locations", async (req, res) => {
@@ -27,6 +29,37 @@ app.get("/api/locations", async (req, res) => {
 
     res.json(locations);
   });
+});
+
+
+//Endpoint para registrar usuarios
+app.post("/api/signup", async (req, res) => {
+  const { nombre, correo, contrasena } = req.body;
+  console.log(req.body);
+
+  if (!nombre || !correo || !contrasena) {
+    return res.status(400).json({ error: "Todos los campos son obligatorios" });
+  }
+
+  try {
+    // Encriptar contraseña
+    const hash = await bcrypt.hash(contrasena, 10);
+
+    // Guardar en la base de datos
+    db.query(
+      'INSERT INTO Usuario (correo, nombre, contrasena) VALUES (?, ?, ?)',
+      [correo, nombre, hash],
+      (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: "Error al registrar usuario" });
+        }
+        res.status(201).json({ message: "Usuario registrado con éxito", id: result.insertId });
+      }
+    );
+  } catch (error) {
+    res.status(500).json({ error: "Error en el servidor" });
+  }
 });
 
 

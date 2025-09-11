@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Adrian-Garcia-Student/GeoRules#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "express": "^5.1.0",
     "mysql2": "^3.14.5"
   }

@@ -1,7 +1,6 @@
 //---------------------------------------------------------------------------------------------------------------------------
 
 async function initMap(lat, lon, direccion) {
-    const locationList = [{lat: 25.62838011058238, lon: -100.30402303520061}, {lat: 25.651100767545586, lon: -100.26618896222656}, {lat: 25.63027923400895, lon: -100.30287950319702}];
     const locationAddress = await fetch('/api/locations').then(res => res.json());
     //Formato Visual de los marcadores en el mapa
     const redIcon = new L.Icon({
@@ -27,21 +26,7 @@ async function initMap(lat, lon, direccion) {
 
     // Marcador con dirección actual
     L.circleMarker([lat, lon], {radius : 30, weight : 4})
-      .addTo(map)
-      .bindPopup(`<b>Estás aquí</b><br>${direccion}`)
-      .openPopup();
-
-    for (const l of locationList) {
-        if(getDistanceFromLatLonInKm(l.lat, l.lon, lat, lon) <= 5){
-            const nombreDireccion = await justGetAddres(l.lat, l.lon);
-            console.log(nombreDireccion);
-            if (nombreDireccion){
-                L.marker([l.lat, l.lon], {icon : redIcon})
-                    .addTo(map)
-                    .bindPopup(`${nombreDireccion}`);
-            }
-        }
-    };
+      .addTo(map);
 
     for (const l of locationAddress) {
         const coordinates = await getLatLon(l.address);
@@ -115,7 +100,7 @@ async function getAddress(lat, lon) {
     }
     
     const data = await res.json();
-    document.getElementById("status").textContent = `Ubicación: ${data.display_name}`;
+    //document.getElementById("status").textContent = `Ubicación: ${data.display_name}`;
 
     initMap(lat, lon, data.display_name); //Llamado a initMap
     
