@@ -1,6 +1,8 @@
 import express from "express";
 import db from './db.js';
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
+import 'dotenv/config';
 
 const app = express();
 const PORT = 3000;
@@ -8,7 +10,7 @@ const PORT = 3000;
 app.use(express.static("public"));
 app.use(express.json());
 
-// Endpoint para búsqueda de ubiaciones en la base de datos
+// Endpoint para búsqueda de ubicaciones en la base de datos
 app.get("/api/locations", async (req, res) => {
   db.query("SELECT * FROM Ubicacion", (err, results) => {
     if (err) {
@@ -58,6 +60,71 @@ app.post("/api/signup", async (req, res) => {
       }
     );
   } catch (error) {
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+});
+
+// Endpoint para validar usuarios
+app.post("/api/login", async (req, res) => {
+  const { correo, contrasena } = req.body;
+  console.log(req.body);
+
+  if (!correo || !contrasena) {
+    return res.status(400).json({ error: "Todos los campos son obligatorios" });
+  }
+
+  try {
+    // Buscar usuario por correo
+    db.query(
+      "SELECT * FROM Usuario WHERE correo = ?",
+      [correo],
+      async (err, results) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: "Error al obtener usuario" });
+        }
+
+        if (results.length === 0) {
+          return res.status(401).json({ error: "Usuario no encontrado" });
+        }
+
+        const usuario = results[0];
+
+        // Comparar contraseña ingresada con el hash en BD
+        const match = await bcrypt.compare(contrasena, usuario.contrasena);
+
+        if (!match) {
+          return res.status(401).json({ error: "Contraseña incorrecta" });
+        }
+
+        const SECRET = process.env.JWT_SECRET;
+
+        // ✅ Generar JWT
+        const token = jwt.sign(
+          {
+            id: usuario.id,
+            nombre: usuario.nombre,
+            correo: usuario.correo,
+            rol: usuario.rol || "user", // si manejas roles
+          },
+          SECRET,
+          { expiresIn: "30d" } // el token expira en 1 hora
+        );
+
+        // Responder con el token y datos básicos
+        res.status(200).json({
+          message: "Login exitoso",
+          token,
+          usuario: {
+            id: usuario.id,
+            nombre: usuario.nombre,
+            correo: usuario.correo,
+          },
+        });
+      }
+    );
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error en el servidor" });
   }
 });

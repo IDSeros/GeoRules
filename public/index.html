@@ -174,10 +174,38 @@
       });
 
       // Envío del login
-      document.getElementById('login-form')?.addEventListener('submit', function (e) {
+      document.getElementById('login-form')?.addEventListener('submit', async function (e) {
         e.preventDefault();
-        window.location.href = 'map.html';
-        closeModal();
+        //Obtener valores de los inputs
+        const correo = document.getElementById('login-email').value.trim();
+        const contrasena = document.getElementById('login-password').value;
+
+        try {
+          //Hacer validación por backend
+          const res = await fetch("http://localhost:3000/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ correo, contrasena })
+          });
+
+          const data = await res.json();
+
+          if (res.ok) {
+            alert("✅ Bienvenido " + data.usuario.nombre);
+            // Guardar token si usas JWT
+            if (data.token) {
+            localStorage.setItem("token", data.token);
+          }
+            // Redirigir al mapa
+            window.location.href = "map.html";
+            closeModal();
+          } else {
+            alert("❌ Error: " + (data.error || "Credenciales inválidas"));
+          }
+          } catch (err) {
+            console.error(err);
+            alert("❌ Error de conexión con el servidor");
+          }
       });
 
       // Envío del signup
