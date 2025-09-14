@@ -1,20 +1,22 @@
-import mysql from 'mysql2';
+import pkg from 'pg';
+const { Pool } = pkg;
 
-//Datos de Conexión
-const connection = mysql.createConnection({
-  host: '127.0.0.1',
-  user: 'root',
-  password: 'Kinh-13579$',
-  database: 'GEORULES'
-});
-
-//Conexión a Base de Datos
-connection.connect((err) => {
-  if (err) {
-    console.error('Error de conexión: ' + err.stack);
-    return;
+const pool = new Pool({
+  //External Database URL
+  connectionString: "postgresql://adrian:0txxPpDYYWdhidTVJBJ3sXOIEVntlChU@dpg-d32ajqgdl3ps73fut3r0-a.oregon-postgres.render.com/georules_postgres",
+  ssl: {
+    rejectUnauthorized: false // necesario en Render
   }
-  console.log('Conectado como id ' + connection.threadId);
 });
 
-export default connection;
+// Verificar conexión
+pool.connect()
+  .then(client => {
+    console.log("✅ Conectado a PostgreSQL en Render");
+    client.release();
+  })
+  .catch(err => {
+    console.error("❌ Error de conexión:", err.stack);
+  });
+
+export default pool;

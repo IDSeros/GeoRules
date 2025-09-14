@@ -1,6 +1,7 @@
 //---------------------------------------------------------------------------------------------------------------------------
 
 async function initMap(lat, lon, direccion) {
+    //Obtener ubicaciones
     const locationAddress = await fetch('/api/locations').then(res => res.json());
     //Formato Visual de los marcadores en el mapa
     const redIcon = new L.Icon({
