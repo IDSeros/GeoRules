@@ -101,6 +101,10 @@
             <label for="confirmpass">Confirmar contraseña</label>
             <input id="confirmpass" type="password" required placeholder="••••••••">
           </div>
+          <div class="form-group" id="admin-code-group">
+            <label for="admin-code">Código de administrador (si aplica)</label>
+            <input id="admin-code" type="text" placeholder="Código admin (opcional)">
+          </div>
           <div class="hyperlink">
             <label id="back-to-login" style="cursor:pointer;">¿Ya tienes una cuenta? Iniciar sesión</label>
           </div>
@@ -216,6 +220,7 @@
         const correo = document.getElementById('signup-email').value.trim();
         const contrasena = document.getElementById('signup-password').value;
         const confirmar = document.getElementById('confirmpass').value;
+        const adminCode = document.getElementById('admin-code')?.value?.trim();
 
         // Validar contraseñas
         if (contrasena !== confirmar) {
@@ -228,7 +233,7 @@
           const res = await fetch("/api/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ nombre, correo, contrasena })
+            body: JSON.stringify({ nombre, correo, contrasena, adminCode })
           });
 
           const data = await res.json();

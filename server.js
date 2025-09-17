@@ -35,26 +35,37 @@ app.get("/api/locations", async (req, res) => {
 
 // Endpoint para registrar usuarios
 app.post("/api/signup", async (req, res) => {
-  const { nombre, correo, contrasena } = req.body;
+  const { nombre, correo, contrasena, adminCode } = req.body;
 
   if (!nombre || !correo || !contrasena) {
     return res.status(400).json({ error: "Todos los campos son obligatorios" });
   }
 
   try {
+    // Verifica si ya existe el correo
+    const exists = await db.query('SELECT 1 FROM Usuario WHERE correo = $1', [correo]);
+    if (exists.rows.length) return res.status(409).json({ error: "Correo ya registrado" });
+
     const hash = await bcrypt.hash(contrasena, 10);
 
+    // Decide rol: si envían adminCode y coincide con el .env => admin, sino user
+    let rol = 'user';
+    if (adminCode && adminCode === process.env.ADMIN_CODE) {
+      rol = 'admin';
+    }
+
     const result = await db.query(
-      'INSERT INTO Usuario (correo, nombre, contrasena) VALUES ($1, $2, $3) RETURNING id',
-      [correo, nombre, hash]
+      'INSERT INTO Usuario (correo, nombre, contrasena, rol) VALUES ($1, $2, $3, $4) RETURNING id',
+      [correo, nombre, hash, rol]
     );
 
-    res.status(201).json({ message: "Usuario registrado con éxito", id: result.rows[0].id });
+    res.status(201).json({ message: "Usuario registrado con éxito", id: result.rows[0].id, rol });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al registrar usuario" });
   }
 });
+
 
 // Endpoint para validar usuarios
 app.post("/api/login", async (req, res) => {
