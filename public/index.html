@@ -199,6 +199,7 @@
             // Guardar token si usas JWT
             if (data.token) {
             localStorage.setItem("token", data.token);
+            localStorage.setItem("rol", data.usuario.rol);
           }
             // Redirigir al mapa
             window.location.href = "map.html";
@@ -242,6 +243,8 @@
             alert("✅ Registro exitoso: " + data.message);
             document.getElementById('signup-form').reset();
             document.getElementById('signup-view').style.display = "none";
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("rol", data.usuario.rol);
             window.location.href = 'map.html';
             closeModal();
           } else {

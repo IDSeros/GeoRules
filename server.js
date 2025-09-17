@@ -59,7 +59,18 @@ app.post("/api/signup", async (req, res) => {
       [correo, nombre, hash, rol]
     );
 
-    res.status(201).json({ message: "Usuario registrado con éxito", id: result.rows[0].id, rol });
+    const token = jwt.sign(
+      {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        correo: usuario.correo,
+        rol: usuario.rol || "user",
+      },
+      SECRET,
+      { expiresIn: "30d" }
+    );
+
+    res.status(201).json({ message: "Usuario registrado con éxito", token, id: result.rows[0].id, rol });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al registrar usuario" });
@@ -113,6 +124,7 @@ app.post("/api/login", async (req, res) => {
         id: usuario.id,
         nombre: usuario.nombre,
         correo: usuario.correo,
+        rol: usuario.rol || "user",
       },
     });
   } catch (err) {
