@@ -1,3 +1,6 @@
+const statusElement = document.getElementById("status");
+const statusPanel = document.getElementById("statusPanel");
+
 //---------------------------------------------------------------------------------------------------------------------------
 
 async function initMap(lat, lon, direccion) {
@@ -101,10 +104,7 @@ async function getAddress(lat, lon) {
     }
     
     const data = await res.json();
-    //document.getElementById("status").textContent = `Ubicación: ${data.display_name}`;
-
     initMap(lat, lon, data.display_name); //Llamado a initMap
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------------
@@ -115,10 +115,12 @@ if ("geolocation" in navigator) {
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
             console.log(`Latitud de Usuario: ${lat}, Longitud de Usuario ${lon}`);
-            getAddress(lat, lon); //Llamado a getAddress
+            getAddress(lat, lon);
+            statusPanel.style.display = "none";
         },
         err => {
-            document.getElementById("status").textContent = "Error: " + err.message;
+            statusElement.textContent = "Error: " + err.message;
+            statusPanel.style.display = "block";
         },
         {
             enableHighAccuracy: true, // Usa GPS si está disponible
@@ -127,7 +129,7 @@ if ("geolocation" in navigator) {
         }
     );
 } else {
-    document.getElementById("status").textContent = "Geolocalización no soportada en este navegador.";
+    statusElement.textContent = "Geolocalización no soportada en este navegador.";
 }
 
 //---------------------------------------------------------------------------------------------------------------------------
