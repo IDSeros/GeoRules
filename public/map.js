@@ -1,16 +1,16 @@
-// variables globales reutilizables
+// variables globales
 let map = null;
 let userCircle = null;
 let markersLayer = null;
-let locationsCache = [];           // locations con coords { ...info, coords: {lat, lon} }
-const geocodeCache = new Map();    // cache por dirección
-let lastUserPos = null;            // {lat, lon}
-const minDistanceToUpdateKm = 0.03; // ~30 metros - umbral para recargar marcadores
+let locationsCache = [];
+const geocodeCache = new Map();
+let lastUserPos = null;
+let currentMarker = null;
 
 const statusElement = document.getElementById("status");
 const statusPanel = document.getElementById("statusPanel");
 
-// icono (global)
+// icono marcador
 const redIcon = new L.Icon({
   iconUrl: 'redMarkerIcon.png',
   iconSize: [100, 100],
@@ -18,9 +18,9 @@ const redIcon = new L.Icon({
   popupAnchor: [0, -100]
 });
 
-// inicializa mapa la primera vez
+// inicializa mapa
 async function initApp(lat, lon, direccion) {
-  if (map) return; // ya inicializado
+  if (map) return;
 
   map = L.map('map', {
     center: [lat, lon],
@@ -35,21 +35,16 @@ async function initApp(lat, lon, direccion) {
   }).addTo(map);
 
   markersLayer = L.layerGroup().addTo(map);
-
   userCircle = L.circleMarker([lat, lon], { radius: 30, weight: 4 }).addTo(map);
 
-  // cargar y geocodificar direcciones una vez (cache)
   await loadAndCacheLocations();
-
-  // llenar marcadores iniciales
   updateMarkersForPosition(lat, lon);
 }
 
-// carga locations del backend y geocodifica (con cache)
+// carga locations
 async function loadAndCacheLocations() {
   const list = await fetch('/api/locations').then(r => r.json());
 
-  // geocodificar secuencialmente o con Promise.all pero cuidado con rate limits
   for (const l of list) {
     try {
       if (geocodeCache.has(l.address)) {
@@ -57,7 +52,6 @@ async function loadAndCacheLocations() {
       } else {
         const coords = await getLatLon(l.address).catch(() => null);
         if (coords) {
-          // convertir a number por si vienen strings
           const parsed = { lat: Number(coords.lat), lon: Number(coords.lon) };
           geocodeCache.set(l.address, parsed);
           locationsCache.push({ ...l, coords: parsed });
@@ -69,7 +63,7 @@ async function loadAndCacheLocations() {
   }
 }
 
-// actualiza los marcadores visibles según la posición del usuario
+// crea marcadores
 function updateMarkersForPosition(lat, lon) {
   if (!markersLayer) return;
   markersLayer.clearLayers();
@@ -81,6 +75,7 @@ function updateMarkersForPosition(lat, lon) {
       const marker = L.marker([lat2, lon2], { icon: redIcon });
       marker.info = loc;
       marker.on("click", () => {
+        currentMarker = marker;
         document.getElementById("panelTitle").textContent = marker.info.name;
         document.getElementById("addressPanel").textContent = marker.info.address;
         document.getElementById("establishmentPanel").textContent = marker.info.establishment;
@@ -90,78 +85,58 @@ function updateMarkersForPosition(lat, lon) {
         document.getElementById("emergenExitPanel").textContent = (`Salidas de emergencia: ${marker.info.emergncyExits}`);
         document.getElementById("inspectionPanel").textContent = (`Última Inspección de Seguridad: ${marker.info.lastInspection} 📆`);
         document.getElementById("accessPanel").textContent = (`Características de Accesibilidad: ${marker.info.accessibility}`);
-        document.getElementById("infoPanel").classList.remove("hide");
         document.getElementById("infoPanel").classList.add("show");
-        document.getElementById("infoPanel").style.display = "block";
+        updateFavButton(marker.info.id);
       });
       marker.addTo(markersLayer);
     }
   }
 }
 
-// mueve el circulo del usuario y actualiza marcadores si hace falta
+// mueve círculo usuario
 function updateUserLocation(lat, lon) {
   if (!map) return;
-  if (userCircle) {
-    userCircle.setLatLng([lat, lon]);
-  } else {
-    userCircle = L.circleMarker([lat, lon], { radius: 30, weight: 4 }).addTo(map);
-  }
+  if (userCircle) userCircle.setLatLng([lat, lon]);
+  else userCircle = L.circleMarker([lat, lon], { radius: 30, weight: 4 }).addTo(map);
 
-  // centrar suavemente si la distancia es significativa
-  if (!lastUserPos) {
-    map.setView([lat, lon], 15);
-  } else {
+  if (!lastUserPos) map.setView([lat, lon], 15);
+  else {
     const movedKm = getDistanceFromLatLonInKm(lastUserPos.lat, lastUserPos.lon, lat, lon);
-    if (movedKm > 0.2) { // si se mueve >200m, hacer pan/zoom (ajustable)
-      map.panTo([lat, lon]);
-    }
+    if (movedKm > 0.2) map.panTo([lat, lon]);
   }
 
-  // actualizar marcadores solo si se movió un mínimo (ahorra llamadas)
-  if (!lastUserPos || getDistanceFromLatLonInKm(lastUserPos.lat, lastUserPos.lon, lat, lon) >= minDistanceToUpdateKm) {
+  if (!lastUserPos || getDistanceFromLatLonInKm(lastUserPos.lat, lastUserPos.lon, lat, lon) >= 0.03) {
     updateMarkersForPosition(lat, lon);
   }
 
   lastUserPos = { lat, lon };
 }
 
-// obtiene dirección inversa y llama a initApp o updateUserLocation según corresponda
+// obtiene dirección inversa
 async function getAddress(lat, lon) {
   const res = await fetch(`/api/getAddress?lat=${lat}&lon=${lon}`);
-  if (!res.ok) {
-    throw new Error("Error en backend reverse");
-  }
+  if (!res.ok) throw new Error("Error en backend reverse");
   const data = await res.json();
   const display = data.display_name || '';
 
-  if (!map) {
-    await initApp(lat, lon, display);
-  } else {
-    updateUserLocation(lat, lon);
-  }
+  if (!map) await initApp(lat, lon, display);
+  else updateUserLocation(lat, lon);
 }
 
-// tu función getLatLon queda igual pero cuidando parseo
 async function getLatLon(direccion) {
   const res = await fetch(`/api/getLatLon?q=${encodeURIComponent(direccion)}`);
   if (!res.ok) throw new Error("Error en backend reverse");
   const data = await res.json();
-  if (data.length > 0) {
-    return { lat: Number(data[0].lat), lon: Number(data[0].lon) };
-  } else {
-    return null;
-  }
+  if (data.length > 0) return { lat: Number(data[0].lat), lon: Number(data[0].lon) };
+  else return null;
 }
 
-// watchPosition: sólo pide address/actualización cuando hay nueva posición
+// geoloc
 if ("geolocation" in navigator) {
   navigator.geolocation.watchPosition(
     pos => {
       const lat = pos.coords.latitude;
       const lon = pos.coords.longitude;
-      console.log(`Latitud de Usuario: ${lat}, Longitud de Usuario ${lon}`);
-      // Usa la función centralizada
       getAddress(lat, lon).catch(err => {
         console.error(err);
         statusElement.textContent = "Error: " + err.message;
@@ -173,17 +148,13 @@ if ("geolocation" in navigator) {
       statusElement.textContent = "Error: " + err.message;
       statusPanel.style.display = "block";
     },
-    {
-      enableHighAccuracy: true,
-      maximumAge: 0,
-      timeout: 5000
-    }
+    { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
   );
 } else {
   statusElement.textContent = "Geolocalización no soportada en este navegador.";
 }
 
-/* funciones auxiliares (igual que las tuyas) */
+// auxiliares
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   var R = 6371;
   var dLat = deg2rad(lat2 - lat1);
@@ -196,25 +167,81 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 }
 function deg2rad(deg) { return deg * (Math.PI/180); }
 
-
-//---------------------------------------------------------------------------------------------------------------------------
-
+// cerrar panel
 function closePanel() {
-    const infoPanel = document.getElementById("infoPanel");
-
-    infoPanel.classList.remove("show");
-    infoPanel.classList.add("hide");
-
-    //EventListener para esperar a que termine animacion de cierre para esconder el panel
-    infoPanel.addEventListener("animationend", function handler() {
-        infoPanel.style.display = "none";
-        infoPanel.classList.remove("hide");
-        infoPanel.removeEventListener("animationend", handler);
-    });
+  const infoPanel = document.getElementById("infoPanel");
+  infoPanel.classList.remove("show");
+  infoPanel.classList.add("hide");
+  infoPanel.addEventListener("animationend", function handler() {
+    infoPanel.style.display = "none";
+    infoPanel.classList.remove("hide");
+    infoPanel.removeEventListener("animationend", handler);
+  });
 }
 
-//---------------------------------------------------------------------------------------------------------------------------
+// volver
+function goBack() { window.location.href = "index.html"; }
 
-function goBack() {
-    window.location.href = "index.html"; // Redirige a la página principal
+// -------------------- FAVORITOS --------------------
+function getFavorites() {
+  return JSON.parse(localStorage.getItem("favorites") || "[]");
 }
+function saveFavorites(favs) {
+  localStorage.setItem("favorites", JSON.stringify(favs));
+}
+function isFavorite(id) {
+  return getFavorites().some(f => f.id === id);
+}
+function toggleFavorite(currentLoc) {
+  let favs = getFavorites();
+  if (isFavorite(currentLoc.id)) {
+    favs = favs.filter(f => f.id !== currentLoc.id);
+  } else {
+    favs.push(currentLoc);
+  }
+  saveFavorites(favs);
+  updateFavoritesUI();
+  updateFavButton(currentLoc.id);
+}
+function updateFavButton(id) {
+  const btn = document.getElementById("toggleFavorite");
+  if (!btn) return;
+  if (isFavorite(id)) btn.textContent = "★ Quitar de favoritos";
+  else btn.textContent = "☆ Añadir a favoritos";
+}
+function updateFavoritesUI() {
+  const list = document.getElementById("favoritesList");
+  list.innerHTML = "";
+  const favs = getFavorites();
+  if (favs.length === 0) {
+    list.innerHTML = "<p>No tienes favoritos aún.</p>";
+    return;
+  }
+  favs.forEach(loc => {
+    const item = document.createElement("div");
+    item.className = "favorite-item";
+    item.innerHTML = `
+      <span>${loc.name}</span>
+      <button onclick="showFavorite('${loc.id}')">Ver</button>
+    `;
+    list.appendChild(item);
+  });
+}
+function showFavorite(id) {
+  const fav = getFavorites().find(f => f.id === id);
+  if (fav) {
+    document.getElementById("panelTitle").textContent = fav.name;
+    document.getElementById("addressPanel").textContent = fav.address;
+    document.getElementById("infoPanel").classList.add("show");
+    updateFavButton(fav.id);
+  }
+}
+
+// listeners
+document.getElementById("favButton").addEventListener("click", () => {
+  document.getElementById("favoritesPanel").classList.toggle("show");
+  updateFavoritesUI();
+});
+document.getElementById("toggleFavorite").addEventListener("click", () => {
+  if (currentMarker) toggleFavorite(currentMarker.info);
+});

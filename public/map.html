@@ -15,6 +15,7 @@
       <div id="map"></div>
     </div>
 
+    <!-- Panel de detalles -->
     <div id="infoPanel">
       <h3 id="panelTitle">Detalles</h3>
       <p class="info" id="addressPanel"></p>
@@ -25,7 +26,20 @@
       <p class="info" id="emergenExitPanel"></p>
       <p class="info" id="inspectionPanel"></p>
       <p class="info" id="accessPanel"></p>
+
+      <!-- Botón de favoritos dentro del panel -->
+      <button id="toggleFavorite">☆ Añadir a favoritos</button>
+
       <button id="closePanel" onclick="closePanel()">X</button>
+    </div>
+
+    <!-- Botón flotante -->
+    <button id="favButton">★</button>
+
+    <!-- Panel de favoritos -->
+    <div id="favoritesPanel">
+      <h3>Mis Favoritos</h3>
+      <div id="favoritesList"></div>
     </div>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>

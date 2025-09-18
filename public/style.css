@@ -1,9 +1,9 @@
 /* Estilo general */
 #map {
-  width: 100%;        /* Ocupar todo el ancho disponible */
-  height: 80vh;       /* Altura relativa a la pantalla (80% de la ventana) */
+  width: 100%;
+  height: 80vh;
   margin-top: 10px;
-  border-radius: 10px; /* opcional: bordes redondeados */
+  border-radius: 10px;
 }
 
 #infoPanel {
@@ -62,39 +62,87 @@
   font-size: 30px;
 }
 
+/* Botón favorito dentro del panel */
+#toggleFavorite {
+  display: block;
+  margin: 1rem auto;
+  font-size: 1.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #2563eb;
+}
+
+/* Botón flotante de favoritos */
+#favButton {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background-color: #2563eb;
+  color: white;
+  font-size: 28px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 1000;
+}
+
+/* Panel de favoritos */
+#favoritesPanel {
+  position: fixed;
+  right: 5%;
+  bottom: 0;
+  width: 90%;
+  height: 40%;
+  background-color: white;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -2px 40px rgba(0,0,0,0.25);
+  display: none;
+  overflow-y: auto;
+  z-index: 1001;
+  padding: 1rem;
+}
+
+#favoritesPanel.show {
+  display: block;
+  animation: slideIn 0.4s forwards;
+}
+
+.favorite-item {
+  border-bottom: 1px solid #ddd;
+  padding: 0.6rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.favorite-item button {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #2563eb;
+  cursor: pointer;
+}
+
 /* Ajustes para móviles */
 @media (max-width: 768px) {
-  #map {
-    height: 60vh;   /* Más compacto en pantallas pequeñas */
-  }
+  #map { height: 60vh; }
 }
 
 @media (max-width: 480px) {
-  #map {
-    height: 50vh;   /* En pantallas muy pequeñas, todavía más compacto */
-  }
+  #map { height: 50vh; }
 }
 
-/*Animaciones para el panel de información*/
-
+/* Animaciones */
 @keyframes slideIn {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  } 
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes slideOut {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(100%);
-    opacity: 0;
-  }
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(100%); opacity: 0; }
 }
