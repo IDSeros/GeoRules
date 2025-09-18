@@ -163,8 +163,14 @@ function closePanel() {
 
     //EventListener para esperar a que termine animacion de cierre para esconder el panel
     infoPanel.addEventListener("animationend", function handler() {
-    infoPanel.style.display = "none";
-    infoPanel.classList.remove("hide");
-    infoPanel.removeEventListener("animationend", handler);
-  });
+        infoPanel.style.display = "none";
+        infoPanel.classList.remove("hide");
+        infoPanel.removeEventListener("animationend", handler);
+    });
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+function goBack() {
+    window.location.href = "index.html"; // Redirige a la página principal
 }
