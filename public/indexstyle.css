@@ -39,7 +39,7 @@ nav {
   align-items: center;
   gap: 0.6rem;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
 }
 
 .nav-links {
@@ -86,12 +86,13 @@ main {
 
 h1 {
   margin: 0.2rem 0;
-  font-size: 1.8rem;
+  font-size: 2rem;
 }
 
 p.lead {
   margin: 0;
   color: #475569;
+  font-size: 1.2rem;
 }
 
 .grid {
@@ -105,7 +106,7 @@ p.lead {
   padding: 1.25rem 0;
   text-align: center;
   color: #94a3b8;
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 /* Modal */
@@ -132,7 +133,7 @@ p.lead {
 }
 
 label {
-  font-size: 0.86rem;
+  font-size: 3rem;
   color: #334155;
 }
 
@@ -146,4 +147,24 @@ input {
   .hero {
     grid-template-columns: 1fr 360px;
   }
+}
+
+.mapa-img {
+  width: 100%;
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease;
+}
+
+.mapa-img:hover {
+  transform: scale(1.02);
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+p {
+  font-size: 1.2rem;
 }
