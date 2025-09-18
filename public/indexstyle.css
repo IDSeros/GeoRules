@@ -57,8 +57,8 @@ nav {
 
 .btn {
   display: inline-block;
-  padding: 0.56rem 0.9rem;
-  border-radius: 0.6rem;
+  padding: 0.55rem 1rem;
+  border-radius: 1.5rem;
   background: var(--accent);
   color: white;
   text-decoration: none;
@@ -133,7 +133,7 @@ p.lead {
 }
 
 label {
-  font-size: 3rem;
+  font-size: 1.2rem;
   color: #334155;
 }
 
