@@ -85,6 +85,7 @@ function updateMarkersForPosition(lat, lon) {
         document.getElementById("emergenExitPanel").textContent = (`Salidas de emergencia: ${marker.info.emergncyExits}`);
         document.getElementById("inspectionPanel").textContent = (`Última Inspección de Seguridad: ${marker.info.lastInspection} 📆`);
         document.getElementById("accessPanel").textContent = (`Características de Accesibilidad: ${marker.info.accessibility}`);
+        document.getElementById(infoPanel).classList.remove("hide");
         document.getElementById("infoPanel").classList.add("show");
         updateFavButton(marker.info.id);
       });
