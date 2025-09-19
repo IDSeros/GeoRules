@@ -87,6 +87,7 @@ function updateMarkersForPosition(lat, lon) {
         document.getElementById("accessPanel").textContent = (`Características de Accesibilidad: ${marker.info.accessibility}`);
         document.getElementById("infoPanel").classList.remove("hide");
         document.getElementById("infoPanel").classList.add("show");
+        document.getElementById("infoPanel").style.display = "block";
         updateFavButton(marker.info.id);
       });
       marker.addTo(markersLayer);
