@@ -4,7 +4,7 @@
   "description": "",
   "main": "map.js",
   "scripts": {
-    "test": "jest",
+    "test": "set NODE_OPTIONS=--experimental-vm-modules && jest",
     "start": "node server.js"
   },
   "repository": {
