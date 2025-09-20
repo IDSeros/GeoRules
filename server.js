@@ -3,10 +3,6 @@ import db from "./db.js";
 
 const PORT = process.env.PORT;
 
-app.listen(PORT, () => {
-  console.log(`Servidor backend en http://localhost:${PORT}`);
-});
-
 // Verificar conexión
 db.connect()
   .then(client => {
@@ -16,3 +12,7 @@ db.connect()
   .catch(err => {
     console.error("❌ Error de conexión:", err.stack);
   });
+
+app.listen(PORT, () => {
+  console.log(`Servidor backend en http://localhost:${PORT}`);
+});
