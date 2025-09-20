@@ -4,8 +4,11 @@
   "description": "",
   "main": "map.js",
   "scripts": {
-    "test": "set NODE_OPTIONS=--experimental-vm-modules && jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node server.js"
+  },
+  "jest": {
+    "transform": {}
   },
   "repository": {
     "type": "git",

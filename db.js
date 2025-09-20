@@ -1,5 +1,6 @@
 import pkg from 'pg';
 const { Pool } = pkg;
+import 'dotenv/config';
 
 const pool = new Pool({
   //External Database URL
@@ -8,15 +9,5 @@ const pool = new Pool({
     rejectUnauthorized: false // necesario en Render
   }
 });
-
-// Verificar conexión
-pool.connect()
-  .then(client => {
-    console.log("✅ Conectado a PostgreSQL en Render");
-    client.release();
-  })
-  .catch(err => {
-    console.error("❌ Error de conexión:", err.stack);
-  });
 
 export default pool;

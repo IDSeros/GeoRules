@@ -1,11 +1,11 @@
 import request from "supertest";
+import { jest } from "@jest/globals";
 import app from "../app.js";
+import db from "../db.js";
 
 // mock db
-jest.mock("../db.js", () => ({
-  query: jest.fn()
-}));
-import db from "../db.js";
+jest.mock("../db.js");
+db.query = jest.fn();
 
 describe("GET /api/locations", () => {
   afterEach(() => {
