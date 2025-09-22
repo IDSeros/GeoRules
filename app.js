@@ -10,7 +10,6 @@ app.use(express.static("public"));
 app.use(express.json());
 
 // Middleware para obtener los datos de usuario desde JWT
-import jwt from "jsonwebtoken";
 
 function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
