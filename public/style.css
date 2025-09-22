@@ -88,16 +88,22 @@
   position: fixed;
   right: 20px;
   bottom: 20px;
-  width: 60px;
-  height: 60px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   border: none;
   background-color: #2563eb;
   color: white;
-  font-size: 28px;
+  font-size: 56px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   cursor: pointer;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding-bottom: 4px;
+  transform: translate(-40px, -40px);
 }
 
 /* Panel de favoritos */
@@ -155,4 +161,35 @@
 @keyframes slideOut {
   from { transform: translateY(0); opacity: 1; }
   to { transform: translateY(100%); opacity: 0; }
+}
+
+#statusPanel h2 {
+  font-size: 3em;   /* antes ~1.5em, ahora el doble */
+}
+
+#statusPanel p {
+  font-size: 2em;   /* antes ~1em, ahora el doble */
+}
+
+#backButton {
+  width: 120px;       /* ancho */
+  height: 60px;       /* alto */
+  border-radius: 8px; /* esquinas suavemente redondeadas */
+  border: none;
+  background-color: #2563eb;
+  color: white;
+  font-size: 40px;    /* tamaño de la flecha */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(52px, 42px);
+  padding-bottom: 12px;
+}
+
+#statusPanel {
+  position: fixed;
+  bottom: 85%;
+  right: 52%;
 }
