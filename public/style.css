@@ -6,6 +6,16 @@
   border-radius: 10px;
 }
 
+#addLocation {
+  display: block;
+  margin: 1rem auto;
+  font-size: 1.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #2563eb;
+}
+
 #infoPanel {
   position: fixed;
   left: 5%;

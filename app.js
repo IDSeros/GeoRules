@@ -26,6 +26,16 @@ function authMiddleware(req, res, next) {
   }
 }
 
+/* Endpoint para devolver info del usuario (frontend lo usa para mostrar UI) */
+app.get("/api/me", authMiddleware, (req, res) => {
+  res.json({
+    id: req.user.id,
+    nombre: req.user.nombre,
+    correo: req.user.correo,
+    rol: req.user.rol || "user"
+  });
+});
+
 
 // Endpoint para búsqueda de ubicaciones en la base de datos
 app.get("/api/locations", async (req, res) => {
@@ -158,6 +168,64 @@ app.post("/api/login", async (req, res) => {
     res.status(500).json({ error: "Error en el servidor" });
   }
 });
+
+// Obtener lista de encargados para poblar el <select>
+app.get("/api/encargados", authMiddleware, async (req, res) => {
+  try {
+    const result = await db.query("SELECT id, nombre FROM Encargado ORDER BY nombre");
+    res.json(result.rows); // [{ id, nombre }, ...]
+  } catch (err) {
+    console.error("Error fetching encargados:", err);
+    res.status(500).json({ error: "Error al obtener encargados" });
+  }
+});
+
+// Crear nueva ubicación
+app.post("/api/addLocation", authMiddleware, async (req, res) => {
+  const {
+    nombre,
+    direccion,
+    tipoestablecimiento,
+    numextintores,
+    haybotiquin,
+    hayrociadores,
+    numemergenexits,
+    ultimainspeccion, // ISO date string o null
+    idencargado
+  } = req.body;
+
+  if (!nombre || !direccion || !tipoestablecimiento) {
+    return res.status(400).json({ error: "Faltan campos obligatorios (nombre/direccion/tipoestablecimiento)" });
+  }
+
+  try {
+    const q = `
+      INSERT INTO ubicacion
+        (nombre, direccion, tipoestablecimiento, numextintores, haybotiquin, hayrociadores, numemergenexits, ultimainspeccion, idencargado)
+      VALUES
+        ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+      RETURNING id
+    `;
+    const params = [
+      nombre,
+      direccion,
+      tipoestablecimiento,
+      numextintores || 0,
+      !!haybotiquin,
+      !!hayrociadores,
+      numemergenexits || 0,
+      ultimainspeccion || null,
+      idencargado || null
+    ];
+
+    const result = await db.query(q, params);
+    res.status(201).json({ message: "Ubicación creada", id: result.rows[0].id });
+  } catch (err) {
+    console.error("Error insert Ubicacion:", err);
+    res.status(500).json({ error: "Error al crear la ubicación" });
+  }
+});
+
 
 // Endpoint para búsqueda directa
 app.get("/api/getLatLon", async (req, res) => {
