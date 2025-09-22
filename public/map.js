@@ -185,36 +185,50 @@ function closePanel() {
 function goBack() { window.location.href = "index.html"; }
 
 // -------------------- FAVORITOS --------------------
-function getFavorites() {
-  return JSON.parse(localStorage.getItem("favorites") || "[]");
+async function getFavorites() {
+  const token = localStorage.getItem("token");
+  const res = await fetch("/api/favorites", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!res.ok) return [];
+  return await res.json();
 }
-function saveFavorites(favs) {
-  localStorage.setItem("favorites", JSON.stringify(favs));
-}
-function isFavorite(id) {
-  return getFavorites().some(f => f.id === id);
-}
-function toggleFavorite(currentLoc) {
-  let favs = getFavorites();
-  if (isFavorite(currentLoc.id)) {
-    favs = favs.filter(f => f.id !== currentLoc.id);
-  } else {
-    favs.push(currentLoc);
-  }
-  saveFavorites(favs);
+
+async function toggleFavorite(currentLoc) {
+  const token = localStorage.getItem("token");
+  const res = await fetch("/api/favorites/toggle", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ nombreUbicacion: currentLoc.name })
+  });
+  const data = await res.json();
+  console.log(data.message);
   updateFavoritesUI();
-  updateFavButton(currentLoc.id);
+  updateFavButton(currentLoc.name);
 }
-function updateFavButton(id) {
+
+async function isFavorite(nombreUbicacion) {
+  const favs = await getFavorites();
+  return favs.some(f => f.nombre === nombreUbicacion);
+}
+
+async function updateFavButton(nombreUbicacion) {
   const btn = document.getElementById("toggleFavorite");
   if (!btn) return;
-  if (isFavorite(id)) btn.textContent = "★ Quitar de favoritos";
-  else btn.textContent = "☆ Añadir a favoritos";
+  if (await isFavorite(nombreUbicacion)) {
+    btn.textContent = "★ Quitar de favoritos";
+  } else {
+    btn.textContent = "☆ Añadir a favoritos";
+  }
 }
-function updateFavoritesUI() {
+
+async function updateFavoritesUI() {
   const list = document.getElementById("favoritesList");
   list.innerHTML = "";
-  const favs = getFavorites();
+  const favs = await getFavorites();
   if (favs.length === 0) {
     list.innerHTML = "<p>No tienes favoritos aún.</p>";
     return;
@@ -223,20 +237,18 @@ function updateFavoritesUI() {
     const item = document.createElement("div");
     item.className = "favorite-item";
     item.innerHTML = `
-      <span>${loc.name}</span>
-      <button onclick="showFavorite('${loc.id}')">Ver</button>
+      <span>${loc.nombre}</span>
+      <button onclick="showFavorite('${loc.idubicacion}', '${loc.nombre}', '${loc.direccion}')">Ver</button>
     `;
     list.appendChild(item);
   });
 }
-function showFavorite(id) {
-  const fav = getFavorites().find(f => f.id === id);
-  if (fav) {
-    document.getElementById("panelTitle").textContent = fav.name;
-    document.getElementById("addressPanel").textContent = fav.address;
-    document.getElementById("infoPanel").classList.add("show");
-    updateFavButton(fav.id);
-  }
+
+function showFavorite(id, nombre, direccion) {
+  document.getElementById("panelTitle").textContent = nombre;
+  document.getElementById("addressPanel").textContent = direccion;
+  document.getElementById("infoPanel").classList.add("show");
+  updateFavButton(nombre);
 }
 
 // listeners

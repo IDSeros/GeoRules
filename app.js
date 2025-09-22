@@ -9,6 +9,25 @@ const app = express();
 app.use(express.static("public"));
 app.use(express.json());
 
+// Middleware para obtener los datos de usuario desde JWT
+import jwt from "jsonwebtoken";
+
+function authMiddleware(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ error: "Token requerido" });
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // ahora tenemos req.user.id, req.user.correo, etc.
+    next();
+  } catch (err) {
+    console.error(err);
+    return res.status(403).json({ error: "Token inválido" });
+  }
+}
+
+
 // Endpoint para búsqueda de ubicaciones en la base de datos
 app.get("/api/locations", async (req, res) => {
   try {
@@ -17,7 +36,7 @@ app.get("/api/locations", async (req, res) => {
     const locations = results.rows.map((row) => ({
       name: row.nombre,
       address: row.direccion,
-      establishment: row.tipoestablecimiento, // cuidado con minúsculas
+      establishment: row.tipoestablecimiento,
       numExtinguisher: row.numextintores,
       firstAid: row.haybotiquin,
       sprinklers: row.hayrociadores,
@@ -178,5 +197,64 @@ app.get("/api/getAddress", async (req, res) => {
     res.status(500).json({ error: "Error en el servidor" });
   }
 });
+
+// Obtener favoritos del usuario
+app.get("/api/favorites", authMiddleware, async (req, res) => {
+  try {
+    const result = await db.query(
+      `SELECT f.idubicacion, u.nombre, u.direccion
+       FROM favoritos f
+       JOIN ubicacion u ON f.idubicacion = u.id
+       WHERE f.idusuario = $1
+       ORDER BY f.fechaguardado DESC`,
+      [req.user.id]
+    );
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al obtener favoritos" });
+  }
+});
+
+// Alternar favorito (agregar/quitar)
+app.post("/api/favorites/toggle", authMiddleware, async (req, res) => {
+  const { nombreUbicacion } = req.body; // viene del marcador actual
+  if (!nombreUbicacion) return res.status(400).json({ error: "Falta nombreUbicacion" });
+
+  try {
+    // Obtener ID de la ubicación
+    const ubicacion = await db.query("SELECT id FROM ubicacion WHERE nombre = $1", [nombreUbicacion]);
+    if (ubicacion.rows.length === 0) return res.status(404).json({ error: "Ubicación no encontrada" });
+
+    const idUbicacion = ubicacion.rows[0].id;
+
+    // Revisar si ya es favorito
+    const fav = await db.query(
+      "SELECT 1 FROM favoritos WHERE idusuario = $1 AND idubicacion = $2",
+      [req.user.id, idUbicacion]
+    );
+
+    if (fav.rows.length > 0) {
+      // Si ya existe → eliminar
+      await db.query(
+        "DELETE FROM favoritos WHERE idusuario = $1 AND idubicacion = $2",
+        [req.user.id, idUbicacion]
+      );
+      return res.json({ message: "Favorito eliminado" });
+    } else {
+      // Si no existe → agregar
+      await db.query(
+        "INSERT INTO favoritos (idusuario, idubicacion) VALUES ($1, $2)",
+        [req.user.id, idUbicacion]
+      );
+      return res.json({ message: "Favorito agregado" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al alternar favorito" });
+  }
+});
+
 
 export default app;
