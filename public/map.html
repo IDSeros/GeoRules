@@ -35,6 +35,9 @@
       <button id="toggleFavorite">☆ Añadir a favoritos</button>
 
       <button id="closePanel" onclick="closePanel()">X</button>
+
+      <button id="deleteLocationBtn">🗑 Eliminar ubicación</button>
+
     </div>
 
     <!-- Botón flotante -->
@@ -152,6 +155,20 @@
         if (me && me.rol === "admin") adminBtn.style.display = "block";
         else adminBtn.style.display = "none";
       }
+
+      //Si el usaurio es admin se mostrará el botón de borrar ubicación
+      async function toggleAdminFeatures() {
+        const me = await fetchMe();
+        const deleteBtn = document.getElementById("deleteLocationBtn");
+        if (me && me.rol === "admin") {
+          deleteBtn.style.display = "block";
+        } else {
+          deleteBtn.style.display = "none";
+        }
+      }
+      
+document.addEventListener("DOMContentLoaded", toggleAdminFeatures);
+
 
       document.addEventListener("DOMContentLoaded", toggleAdminButton);
     </script>

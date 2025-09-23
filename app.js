@@ -43,6 +43,7 @@ app.get("/api/locations", async (req, res) => {
     const results = await db.query("SELECT * FROM Ubicacion");
     
     const locations = results.rows.map((row) => ({
+      id: row.id,
       name: row.nombre,
       address: row.direccion,
       establishment: row.tipoestablecimiento,
@@ -322,6 +323,56 @@ app.post("/api/favorites/toggle", authMiddleware, async (req, res) => {
     res.status(500).json({ error: "Error al alternar favorito" });
   }
 });
+
+// Middleware extra para admins
+function adminMiddleware(req, res, next) {
+  if (req.user.rol !== "admin") {
+    return res.status(403).json({ error: "Acceso denegado: solo admins" });
+  }
+  next();
+}
+
+// Endpoint para eliminar ubicación
+app.delete("/api/locations/:id", authMiddleware, adminMiddleware, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await db.query("DELETE FROM ubicaciones WHERE id = $1 RETURNING *", [id]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Ubicación no encontrada" });
+    }
+
+    res.json({ message: "Ubicación eliminada correctamente", deleted: result.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al eliminar la ubicación" });
+  }
+});
+
+document.getElementById("deleteLocationBtn").addEventListener("click", async () => {
+  const locationId = window.currentLocationId; //este id lo asignas cuando abres un panel
+  if (!locationId) return alert("No se encontró la ubicación.");
+  
+  const token = localStorage.getItem("token");
+  if (!token) return alert("No estás autenticado.");
+  
+  if (!confirm("¿Seguro que quieres eliminar esta ubicación?")) return;
+  
+  const res = await fetch(`/api/locations/${locationId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  
+  if (res.ok) {
+    alert("Ubicación eliminada.");
+    location.reload(); // refrescar mapa y lista
+  } else {
+    alert("Error al eliminar la ubicación.");
+  }
+});
+
+
 
 
 export default app;
