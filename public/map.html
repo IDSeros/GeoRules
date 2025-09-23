@@ -9,7 +9,7 @@
   </head>
   <body>
     <button id="backButton" onclick="goBack()">&#8592;</button>
-    <button id="addLocationBtn" onclick="openAddLocationModal()">+</button>
+    <button id="addLocationBtn">+</button>
     <div id="statusPanel">
       <h2>Mi ubicación</h2>
       <p id="status">Obteniendo ubicación...</p>
@@ -128,7 +128,7 @@
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="map.js"></script>
-    <script src="location.js"></script>
+    <script src="location.js" defer></script>
     <script>
       async function fetchMe() {
         const token = localStorage.getItem("token");
