@@ -6,7 +6,7 @@
   border-radius: 10px;
 }
 
-#addLocation {
+#addLocationBtn {
   display: block;
   margin: 1rem auto;
   font-size: 1.4rem;
@@ -110,7 +110,7 @@
 /* Panel de favoritos */
 #favoritesPanel {
   position: fixed;
-  right: 5%;
+  right: 3%;
   bottom: 0;
   width: 90%;
   height: 40%;
@@ -121,6 +121,7 @@
   overflow-y: auto;
   z-index: 1001;
   padding: 1rem;
+  font-size: 35px;
 }
 
 #favoritesPanel.show {
