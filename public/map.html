@@ -186,22 +186,24 @@
 
         // abrir modal mostrando esta vista
         function openAddLocationModal() {
-          // si tu modal global y funciones openModal() existen, puedes reutilizarlas.
-          // Aquí simple toggle: mostrar modal y solo la vista de add location
           const modal = document.getElementById("modal");
           if (!modal) return;
           modal.style.display = "flex";
           modal.setAttribute("aria-hidden", "false");
 
-          // esconder otras vistas (login/signup)
-          document.getElementById("login-view")?.style.display = "none";
-          document.getElementById("signup-view")?.style.display = "none";
+          // esconder otras vistas (login/signup) — forma segura
+          const loginViewEl = document.getElementById("login-view");
+          if (loginViewEl) loginViewEl.style.display = "none";
+          const signupViewEl = document.getElementById("signup-view");
+          if (signupViewEl) signupViewEl.style.display = "none";
+
           addView.style.display = "block";
 
           // cargar encargados al abrir
           loadEncargados();
           document.getElementById("loc-nombre").focus();
         }
+
 
         function closeModal() {
           const modal = document.getElementById("modal");
