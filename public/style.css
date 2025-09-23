@@ -14,6 +14,7 @@
   border: none;
   cursor: pointer;
   color: #2563eb;
+  z-index: 9999;
 }
 
 #infoPanel {
@@ -104,6 +105,7 @@
   line-height: 1;
   padding-bottom: 4px;
   transform: translate(-40px, -40px);
+  z-index: 9999;
 }
 
 /* Panel de favoritos */
@@ -186,6 +188,7 @@
   justify-content: center;
   transform: translate(52px, 42px);
   padding-bottom: 12px;
+  z-index: 9999;
 }
 
 #statusPanel {

@@ -80,10 +80,10 @@
       nombre: document.getElementById("loc-nombre").value.trim(),
       direccion: document.getElementById("loc-direccion").value.trim(),
       tipoestablecimiento: document.getElementById("loc-tipo").value,
-      numextintores: parseInt(document.getElementById("loc-numext").value || "0", 10),
+      numextintores: Number.parseInt(document.getElementById("loc-numext").value || "0", 10),
       haybotiquin: document.querySelector('input[name="loc-botiquin"]:checked').value === "true",
       hayrociadores: document.querySelector('input[name="loc-rociadores"]:checked').value === "true",
-      numemergenexits: parseInt(document.getElementById("loc-numsalidas").value || "0", 10),
+      numemergenexits: Number.parseInt(document.getElementById("loc-numsalidas").value || "0", 10),
       ultimainspeccion: document.getElementById("loc-ultimainspeccion").value || null,
       idencargado: document.getElementById("loc-encargado").value || null
     };
