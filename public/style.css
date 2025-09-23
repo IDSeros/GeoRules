@@ -4,6 +4,7 @@
   height: 80vh;
   margin-top: 10px;
   border-radius: 10px;
+  z-index: 300;
 }
 
 #addLocationBtn {
@@ -35,7 +36,7 @@
   border-radius: 30px;
   background-color: white;
   box-shadow: 0 -2px 80px rgb(139, 139, 139);
-  z-index: 999;
+  z-index: 99999;
 
   display: none;
   overflow-y: scroll;

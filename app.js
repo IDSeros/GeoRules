@@ -338,7 +338,7 @@ app.delete("/api/locations/:id", authMiddleware, adminMiddleware, async (req, re
   const { id } = req.params;
 
   try {
-    const result = await db.query("DELETE FROM ubicaciones WHERE id = $1 RETURNING *", [id]);
+    const result = await db.query("DELETE FROM ubicacion WHERE id = $1 RETURNING *", [id]);
 
     if (result.rowCount === 0) {
       return res.status(404).json({ error: "Ubicación no encontrada" });
