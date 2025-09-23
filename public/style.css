@@ -8,6 +8,8 @@
 
 #addLocationBtn {
   border-radius: 50%;
+  width: 120px;
+  height: 120px;
   border: none;
   background-color: #2563eb;
   color: white;
@@ -19,8 +21,9 @@
   justify-content: center;
   line-height: 1;
   padding-bottom: 4px;
-  transform: translate(-40px, -40px);
-  z-index: 9999;
+  transform: translate(800px, -30px);
+  font-size: 5rem;
+  line-height: 1;
 }
 
 #infoPanel {
@@ -202,3 +205,139 @@
   bottom: 85%;
   right: 52%;
 }
+
+/* ---------------- Modal / Backdrop ---------------- */
+#modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;                     /* aumentado */
+  background: rgba(2, 6, 23, 0.45);
+  z-index: 9999;
+}
+
+#modal.open { display: flex; }
+
+/* Contenedor del contenido del modal */
+.modal-content {
+  width: 100%;
+  max-width: 720px;             
+  background: var(--card, #ffffff);
+  border-radius: 14px;    
+  padding: 1.5rem;             
+  box-shadow: 0 16px 44px rgba(2,6,23,0.20);
+  transform: translateY(0);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Encabezado del modal */
+#add-location-view h3 {
+  display: block;
+  margin: 0 0 0.8rem 0;
+  font-size: 3rem;          
+  color: #0f172a;
+  width: auto;
+  height: auto;
+}
+
+/* ---------------- Formulario ---------------- */
+.form-group { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1rem; } /* gaps/espaciado mayores */
+label { font-size: 2rem; color: #334155; }                                            /* más grande */
+
+/* Inputs / select / date / number */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+  width: 90%;
+  padding: 0.9rem 1rem;               
+  border-radius: 0.8rem;               
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  font-size: 1.8rem;                  
+  color: #0f172a;
+  outline: none;
+  transition: border-color .12s ease, box-shadow .12s ease;
+  box-shadow: none;
+}
+
+/* Focus accesible */
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent, #2563eb);
+  box-shadow: 0 0 0 8px rgba(37,99,235,0.08); /* mayor anillo de foco */
+}
+
+/* Select con flecha y padding extra a la derecha */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 2.4rem;               /* espacio aumentado para la flecha */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='8' viewBox='0 0 12 6'><path fill='%23334' d='M6 6L0 0h12z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 1.15rem center; /* ajustado */
+}
+
+/* Inputs tipo number: botón pequeño, ajustar tamaño */
+input[type="number"] { -moz-appearance: textfield; }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* Radios: grupo y alineación */
+.form-group > div { display:flex; gap: 1.25rem; align-items: center; } /* gap mayor */
+input[type="radio"] { transform: scale(1.2); margin-right: 0.45rem; }   /* radios más grandes */
+
+/* ---------------- Botones ---------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.15rem;             /* padding aumentado */
+  border-radius: 12px;                 /* más grande */
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.05rem;                  /* texto más grande */
+  background: var(--accent, #2563eb);
+  color: #fff;
+  transition: transform .08s ease, box-shadow .12s ease, opacity .12s ease;
+}
+
+.btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(2,6,23,0.12); }
+.btn:active { transform: translateY(0); }
+
+.btn.cancel {
+  background: #e2e8f0;
+  color: #0f172a;
+  box-shadow: none;
+}
+
+/* disabled */
+.btn[disabled] { opacity: 0.75; cursor: not-allowed; transform: none; }
+
+/* ---------------- Mensajes de error / validación ---------------- */
+.input-error { border-color: #ef4444 !important; box-shadow: 0 0 0 8px rgba(239,68,68,0.08); } /* mayor foco de error */
+.error-text { color: #dc2626; font-size: 1rem; margin-top: 0.35rem; }
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 480px) {
+  .modal-content { padding: 1.2rem; max-width: 98%; }
+  label { font-size: 1.2rem; }
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  select { padding: 1rem 1rem; font-size: 1.05rem; min-height: 54px; } /* campos más grandes en móvil */
+  .btn { width: 48%; font-size: 1rem; padding: 0.9rem 0.9rem; }
+}
+
+/* ---------------- Pequeños toques visuales ---------------- */
+#add-location-form { margin: 0; }
+.form-group:last-of-type { margin-bottom: 0.4rem; }
