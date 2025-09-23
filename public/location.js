@@ -131,4 +131,28 @@
     if (e.target === modalElem) closeModal();
   });
 
+//Eliminar ubicación
+document.getElementById("deleteLocationBtn").addEventListener("click", async () => {
+  const locationId = window.currentLocationId; //este id lo asignas cuando abres un panel
+  if (!locationId) return alert("No se encontró la ubicación.");
+  
+  const token = localStorage.getItem("token");
+  if (!token) return alert("No estás autenticado.");
+  
+  if (!confirm("¿Seguro que quieres eliminar esta ubicación?")) return;
+  
+  const res = await fetch(`/api/locations/${locationId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  
+  if (res.ok) {
+    alert("Ubicación eliminada.");
+    location.reload(); // refrescar mapa y lista
+  } else {
+    alert("Error al eliminar la ubicación.");
+  }
+});
+
+
 })();
