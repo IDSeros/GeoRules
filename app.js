@@ -203,7 +203,7 @@ app.post("/api/addLocation", authMiddleware, async (req, res) => {
   try {
     const q = `
       INSERT INTO ubicacion
-        (nombre, direccion, tipoestablecimiento, numextintores, haybotiquin, hayrociadores, numemergenexits, ultimainspeccion, idencargado)
+        (nombre, direccion, tipoestablecimiento, numextintores, haybotiquin, hayrociadores, numemergenexits, ultimainspeccion, encargadoid)
       VALUES
         ($1,$2,$3,$4,$5,$6,$7,$8,$9)
       RETURNING id
