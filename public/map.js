@@ -89,6 +89,11 @@ function updateMarkersForPosition(lat, lon) {
         document.getElementById("infoPanel").classList.add("show");
         document.getElementById("infoPanel").style.display = "block";
         updateFavButton(marker.info.id);
+         // 👇 Guardamos el id globalmente
+        window.currentLocationId = loc.id;
+
+        // Mostramos el panel
+        document.getElementById("infoPanel").style.display = "block";
       });
       marker.addTo(markersLayer);
     }
