@@ -30,6 +30,7 @@ const favIcon = new L.Icon({
 // inicializa mapa
 async function initApp(lat, lon, direccion) {
   if (map) return;
+  lastUserPos = { lat, lon };
 
   map = L.map('map', {
     center: [lat, lon],
