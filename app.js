@@ -28,6 +28,7 @@ function authMiddleware(req, res, next) {
 
 /* Endpoint para devolver info del usuario (frontend lo usa para mostrar UI) */
 app.get("/api/me", authMiddleware, (req, res) => {
+  console.log("llegó a /api/me");
   res.json({
     id: req.user.id,
     nombre: req.user.nombre,
