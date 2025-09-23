@@ -47,8 +47,7 @@ async function initApp(lat, lon, direccion) {
   userCircle = L.circleMarker([lat, lon], { radius: 30, weight: 4 }).addTo(map);
 
   await loadAndCacheLocations();
-  await loadFavorites();
-  updateMarkersForPosition(lat, lon);
+  await updateMarkersForPosition(lat, lon);
 }
 
 // carga locations
@@ -74,9 +73,10 @@ async function loadAndCacheLocations() {
 }
 
 // crea marcadores
-function updateMarkersForPosition(lat, lon) {
+async function updateMarkersForPosition(lat, lon) {
   if (!markersLayer) return;
   markersLayer.clearLayers();
+  await loadFavorites();
 
   for (const loc of locationsCache) {
     if (!loc.coords) continue;
@@ -112,7 +112,7 @@ function updateMarkersForPosition(lat, lon) {
 }
 
 // mueve círculo usuario
-function updateUserLocation(lat, lon) {
+async function updateUserLocation(lat, lon) {
   if (!map) return;
   if (userCircle) userCircle.setLatLng([lat, lon]);
   else userCircle = L.circleMarker([lat, lon], { radius: 30, weight: 4 }).addTo(map);
@@ -124,7 +124,7 @@ function updateUserLocation(lat, lon) {
   }
 
   if (!lastUserPos || getDistanceFromLatLonInKm(lastUserPos.lat, lastUserPos.lon, lat, lon) >= 0.03) {
-    updateMarkersForPosition(lat, lon);
+    await updateMarkersForPosition(lat, lon);
   }
 
   lastUserPos = { lat, lon };
@@ -137,8 +137,11 @@ async function getAddress(lat, lon) {
   const data = await res.json();
   const display = data.display_name || '';
 
-  if (!map) await initApp(lat, lon, display);
-  else updateUserLocation(lat, lon);
+  if (!map) {
+    await initApp(lat, lon, display);
+  } else {
+    await updateUserLocation(lat, lon);
+  }
 }
 
 async function getLatLon(direccion) {
