@@ -27,6 +27,21 @@
   line-height: 1;
 }
 
+#deleteLocationBtn {
+  width: 120px;       /* ancho */
+  height: 60px;       /* alto */
+  border-radius: 8px; /* esquinas suavemente redondeadas */
+  border: none;
+  background-color: #f50000;
+  color: white;
+  font-size: 40px;    /* tamaño de la flecha */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 #infoPanel {
   position: fixed;
   left: 5%;
@@ -80,14 +95,14 @@
 .info {
   padding-left: 10%;
   padding-right: 10%;
-  font-size: 30px;
+  font-size: 40px;
 }
 
 /* Botón favorito dentro del panel */
 #toggleFavorite {
   display: block;
   margin: 1rem auto;
-  font-size: 1.4rem;
+  font-size: 2rem;
   background: none;
   border: none;
   cursor: pointer;
