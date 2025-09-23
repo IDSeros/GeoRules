@@ -6,6 +6,7 @@ let locationsCache = [];
 const geocodeCache = new Map();
 let lastUserPos = null;
 let currentMarker = null;
+let favorites = [{}];
 
 const statusElement = document.getElementById("status");
 const statusPanel = document.getElementById("statusPanel");
@@ -13,6 +14,14 @@ const statusPanel = document.getElementById("statusPanel");
 // icono marcador
 const redIcon = new L.Icon({
   iconUrl: 'redMarkerIcon.png',
+  iconSize: [100, 100],
+  iconAnchor: [50, 100],
+  popupAnchor: [0, -100]
+});
+
+// icono marcador favorito
+const favIcon = new L.Icon({
+  iconUrl: 'favMarkerIcon.png',
   iconSize: [100, 100],
   iconAnchor: [50, 100],
   popupAnchor: [0, -100]
@@ -38,6 +47,7 @@ async function initApp(lat, lon, direccion) {
   userCircle = L.circleMarker([lat, lon], { radius: 30, weight: 4 }).addTo(map);
 
   await loadAndCacheLocations();
+  await loadFavorites();
   updateMarkersForPosition(lat, lon);
 }
 
@@ -72,7 +82,8 @@ function updateMarkersForPosition(lat, lon) {
     if (!loc.coords) continue;
     const lat2 = Number(loc.coords.lat), lon2 = Number(loc.coords.lon);
     if (getDistanceFromLatLonInKm(lat2, lon2, lat, lon) <= 5) {
-      const marker = L.marker([lat2, lon2], { icon: redIcon });
+      const markerIcon = favorites.some(f => f.nombre === loc.name) ? favIcon : redIcon;
+      const marker = L.marker([lat2, lon2], { icon: markerIcon });
       marker.info = loc;
       marker.on("click", () => {
         currentMarker = marker;
@@ -190,13 +201,13 @@ function closePanel() {
 function goBack() { window.location.href = "index.html"; }
 
 // -------------------- FAVORITOS --------------------
-async function getFavorites() {
+async function loadFavorites() {
   const token = localStorage.getItem("token");
   const res = await fetch("/api/favorites", {
     headers: { Authorization: `Bearer ${token}` }
   });
   if (!res.ok) return [];
-  return await res.json();
+  favorites = await res.json();
 }
 
 async function toggleFavorite(currentLoc) {
@@ -216,8 +227,7 @@ async function toggleFavorite(currentLoc) {
 }
 
 async function isFavorite(nombreUbicacion) {
-  const favs = await getFavorites();
-  return favs.some(f => f.nombre === nombreUbicacion);
+  return favorites.some(f => f.nombre === nombreUbicacion);
 }
 
 async function updateFavButton(nombreUbicacion) {
@@ -233,12 +243,11 @@ async function updateFavButton(nombreUbicacion) {
 async function updateFavoritesUI() {
   const list = document.getElementById("favoritesList");
   list.innerHTML = "";
-  const favs = await getFavorites();
-  if (favs.length === 0) {
+  if (favorites.length === 0) {
     list.innerHTML = "<p>No tienes favoritos aún.</p>";
     return;
   }
-  favs.forEach(loc => {
+  favorites.forEach(loc => {
     const item = document.createElement("div");
     item.className = "favorite-item";
     item.innerHTML = `
