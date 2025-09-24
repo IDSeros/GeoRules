@@ -275,16 +275,17 @@
 }
 
 .favorite-view-btn {
-  display: block;
-  width: 100%;
-  padding: 0.8rem;
-  font-size: 1.1rem;
+  display: inline-block;
+  padding: 0.8rem 1.2rem; /* más área clickeable */
+  font-size: 1rem;
+  font-weight: bold;      /* texto más grande */
   border: none;
-  border-radius: 10px;
-  background: #2563eb;
+  border-radius: 8px;
+  width: 50%;
+  background: #2563eb;   /* azul */
   color: white;
   cursor: pointer;
-  margin-top: 0.5rem;
+  transition: background 0.2s;
 }
 
 .favorite-view-btn:hover {
