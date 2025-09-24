@@ -264,7 +264,7 @@ async function updateFavoritesUI() {
     item.className = "favorite-item";
     item.innerHTML = `
       <span>${loc.nombre}</span>
-      <button onclick="showFavorite('${loc.idubicacion}', '${loc.nombre}', '${loc.direccion}')">Ver</button>
+      <button class="favorite-view-btn" onclick="showFavorite('${loc.idubicacion}', '${loc.nombre}', '${loc.direccion}')">Ver</button>
     `;
     list.appendChild(item);
   };

@@ -274,6 +274,26 @@
   height: auto;
 }
 
+.favorite-view-btn {
+  display: inline-block;
+  padding: 0.4rem 0.8rem; /* más área clickeable */
+  font-size: 0.9rem;      /* texto más grande */
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;   /* azul */
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.favorite-view-btn:hover {
+  background: #1d4ed8;   /* azul más oscuro al pasar */
+}
+
+.favorite-view-btn:active {
+  background: #1e40af;   /* azul intenso al presionar */
+}
+
 /* ---------------- Formulario ---------------- */
 .form-group { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1rem; } /* gaps/espaciado mayores */
 label { font-size: 2rem; color: #334155; }                                            /* más grande */
