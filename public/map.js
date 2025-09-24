@@ -102,7 +102,7 @@ async function updateMarkersForPosition(lat, lon) {
         document.getElementById("infoPanel").style.display = "block";
         updateFavButton(marker.info.id);
          // 👇 Guardamos el id globalmente
-        window.currentLocationId = loc.id;
+        globalThis.currentLocationId = loc.id;
 
         // Mostramos el panel
         document.getElementById("infoPanel").style.display = "block";
@@ -252,7 +252,7 @@ async function updateFavoritesUI() {
     list.innerHTML = "<p>No tienes favoritos aún.</p>";
     return;
   }
-  favorites.forEach(loc => {
+  for(const loc of favorites) {
     const item = document.createElement("div");
     item.className = "favorite-item";
     item.innerHTML = `
@@ -260,7 +260,7 @@ async function updateFavoritesUI() {
       <button onclick="showFavorite('${loc.idubicacion}', '${loc.nombre}', '${loc.direccion}')">Ver</button>
     `;
     list.appendChild(item);
-  });
+  };
 }
 
 function showFavorite(id, nombre, direccion) {

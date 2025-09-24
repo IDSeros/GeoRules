@@ -230,12 +230,12 @@
             }
             const data = await res.json();
             encargadoSelect.innerHTML = '<option value="">-- Selecciona encargado --</option>';
-            data.forEach(e => {
+            for(const e of data) {
               const opt = document.createElement("option");
               opt.value = e.id;
               opt.textContent = e.nombre;
               encargadoSelect.appendChild(opt);
-            });
+            };
           } catch (err) {
             console.error("loadEncargados error", err);
           }
@@ -283,8 +283,8 @@
             if (res.ok || res.status === 201) {
               alert("✅ Ubicación registrada correctamente.");
               // opcional: refrescar el mapa o la lista de ubicaciones
-              if (typeof window.refreshLocations === "function") {
-                window.refreshLocations(); // si tienes una función que recarga ubicaciones
+              if (typeof globalThis.refreshLocations === "function") {
+                globalThis.refreshLocations(); // si tienes una función que recarga ubicaciones
               }
               closeModal();
             } else {
@@ -308,7 +308,7 @@
 
       //Eliminar ubicación
       document.getElementById("deleteLocationBtn").addEventListener("click", async () => {
-        const locationId = window.currentLocationId; //este id lo asignas cuando abres un panel
+        const locationId = globalThis.currentLocationId; //este id lo asignas cuando abres un panel
         if (!locationId) return alert("No se encontró la ubicación.");
         
         const token = localStorage.getItem("token");
