@@ -14,7 +14,6 @@
   border: none;
   background-color: #2563eb;
   color: white;
-  font-size: 56px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   cursor: pointer;
   display: flex;
@@ -24,7 +23,6 @@
   padding-bottom: 4px;
   transform: translate(800px, -30px);
   font-size: 5rem;
-  line-height: 1;
 }
 
 #deleteLocationBtn {
