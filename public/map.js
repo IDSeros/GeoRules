@@ -286,11 +286,11 @@ document.getElementById("toggleFavorite").addEventListener("click", () => {
   if (currentMarker) toggleFavorite(currentMarker.info);
 });
 
+let expanded = false;
 document.addEventListener("DOMContentLoaded", () => {
   const panel = document.getElementById("infoPanel");
   const handle = document.getElementById("dragHandle");
 
-  let expanded = false;
 
   handle.addEventListener("click", () => {
     expanded = !expanded;
