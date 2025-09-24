@@ -99,7 +99,14 @@ async function updateMarkersForPosition(lat, lon) {
         document.getElementById("accessPanel").textContent = (`Características de Accesibilidad: ${marker.info.accessibility}`);
         document.getElementById("infoPanel").classList.remove("hide");
         document.getElementById("infoPanel").classList.add("show");
-        document.getElementById("infoPanel").style.display = "block";
+        document.getElementById("infoPanel").style.display = "block";// Mostrar el panel (colapsado al inicio)
+ 
+
+        // Mostrar el panel (colapsado al inicio)
+        const panel = document.getElementById("infoPanel");
+        panel.classList.add("visible");
+        panel.classList.remove("expanded"); // empieza cerrado
+
         updateFavButton(marker.info.id);
          // 👇 Guardamos el id globalmente
         globalThis.currentLocationId = loc.id;
@@ -278,3 +285,20 @@ document.getElementById("favButton").addEventListener("click", () => {
 document.getElementById("toggleFavorite").addEventListener("click", () => {
   if (currentMarker) toggleFavorite(currentMarker.info);
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const panel = document.getElementById("infoPanel");
+  const handle = document.getElementById("dragHandle");
+
+  let expanded = false;
+
+  handle.addEventListener("click", () => {
+    expanded = !expanded;
+    if (expanded) {
+      panel.classList.add("expanded");
+    } else {
+      panel.classList.remove("expanded");
+    }
+  });
+});
+
