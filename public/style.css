@@ -55,6 +55,8 @@
   overflow-y: auto;
   padding: 1rem;
   z-index: 99999;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
 }
 #infoPanel.visible {
   height: 40%; /* aparece en modo “colapsado” */
