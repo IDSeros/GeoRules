@@ -83,3 +83,9 @@ jobs:
           rules_file_name: ''
           cmd_options: '-I'
 
+      - name: Upload ZAP HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-report   # 👈 aquí ya no se llama zap_scan
+          path: zap_report.html
+
