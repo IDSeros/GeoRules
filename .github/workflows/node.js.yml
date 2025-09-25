@@ -88,8 +88,8 @@ jobs:
               sonar-scanner -v || true
               # Ejecuta el análisis (ajusta projectKey/organization/host según tu setup)
               sonar-scanner \
-                -Dsonar.projectKey=mi-org_mi-repo \
-                -Dsonar.organization=mi-org-slug \
+                -Dsonar.projectKey=IDSeros_Georules \
+                -Dsonar.organization=idseros\
                 -Dsonar.sources=. \
                 -Dsonar.host.url=https://sonarcloud.io \
                 -Dsonar.login=${SONAR_TOKEN}
