@@ -51,10 +51,10 @@
     </div>
 
     <!-- ----------------- Modal: Registrar Ubicación ----------------- -->
-    <div id="modal" class="modal" style="display:none;">
-      <div class="modal-content" role="dialog" aria-hidden="true">
+    <div id="modal" class="modal">
+      <div class="modal-content" role="dialog">
         <!-- Add Location view -->
-        <div id="add-location-view" style="display: none;">
+        <div id="add-location-view">
           <h3>Registrar nueva ubicación</h3>
           <form id="add-location-form">
             <div class="form-group">
@@ -90,7 +90,7 @@
               <label>¿Hay botiquín?</label>
               <div>
                 <label><input type="radio" name="loc-botiquin" value="true" checked> Sí</label>
-                <label style="margin-left:1rem;"><input type="radio" name="loc-botiquin" value="false"> No</label>
+                <label class="ml-1rem"><input type="radio" name="loc-botiquin" value="false"> No</label>
               </div>
             </div>
 
@@ -98,7 +98,7 @@
               <label>¿Hay rociadores?</label>
               <div>
                 <label><input type="radio" name="loc-rociadores" value="true"> Sí</label>
-                <label style="margin-left:1rem;"><input type="radio" name="loc-rociadores" value="false" checked> No</label>
+                <label class="ml-1rem"><input type="radio" name="loc-rociadores" value="false" checked> No</label>
               </div>
             </div>
 
@@ -120,8 +120,8 @@
               </select>
             </div>
 
-            <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem">
-              <button type="button" id="close-modal-addlocation" class="btn" style="background:#e2e8f0;color:#0f172a">Cancelar</button>
+            <div class="form-actions">
+              <button type="button" id="close-modal-addlocation" class="btn cancel">Cancelar</button>
               <button type="submit" class="btn">Guardar ubicación</button>
             </div>
           </form>

@@ -7,6 +7,17 @@
   z-index: 300;
 }
 
+.form-actions {
+  display: flex;
+  gap: .5rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.ml-1rem {
+  margin-left: 1rem;
+}
+
 #addLocationBtn {
   border-radius: 50%;
   width: 120px;
