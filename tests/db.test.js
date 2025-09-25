@@ -3,19 +3,11 @@ import app from '../app.js';
 import { jest } from "@jest/globals";
 
 // Mocks
-jest.mock('../db.js', () => ({
-  __esModule: true,
-  default: {
-    connect: jest.fn()
-  }
-}));
+jest.mock('../db.js');
+db.connect = jest.fn();
 
-jest.mock('../app.js', () => ({
-  __esModule: true,
-  default: {
-    listen: jest.fn()
-  }
-}));
+jest.mock('../app.js');
+app.listen = jest.fn();
 
 describe('server startup', () => {
   beforeEach(() => {
