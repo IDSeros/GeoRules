@@ -13,7 +13,9 @@
     "collectCoverageFrom": ["src/**/*.js"],
     "coveragePathIgnorePatterns": [
     "/node_modules/",
-    "/coverage/"
+    "/coverage/",
+    "/coverage/lcov-report/",
+    "/tests/"
     ]
   },
   "repository": {
