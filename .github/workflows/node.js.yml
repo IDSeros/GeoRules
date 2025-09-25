@@ -46,6 +46,8 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage
+      - name: Verificar lcov.info
+        run: ls -l coverage/lcov.info
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
