@@ -304,3 +304,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+export {
+  // state (útil para tests)
+  map, userCircle, markersLayer, locationsCache, geocodeCache, lastUserPos, currentMarker, favorites,
+  // funciones
+  initApp, loadAndCacheLocations, updateMarkersForPosition, updateUserLocation,
+  getAddress, getLatLon, getDistanceFromLatLonInKm, deg2rad,
+  closePanel, loadFavorites, toggleFavorite, isFavorite, updateFavButton, updateFavoritesUI, showFavorite
+};
