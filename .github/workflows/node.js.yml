@@ -82,40 +82,33 @@ jobs:
               echo "$PWD/$SCANNER_DIR/$SCANNER_FOLDER/bin" >> $GITHUB_PATH
               echo "SonarScanner instalado en: $PWD/$SCANNER_DIR/$SCANNER_FOLDER/bin"
 
-          - name: Verify Java (use JDK 17) and run sonar-scanner
+          - name: Run sonar-scanner using explicit Java 17 (robusto)
             env:
               SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
             run: |
               set -euo pipefail
 
               echo "JAVA_HOME = '${JAVA_HOME:-<no-JAVA_HOME-set>}'"
-              echo "PATH (start) = $(echo $PATH | cut -c1-200)..."   # mostrar una parte por seguridad
-              echo "Which java before forcing JAVA_HOME:"
-              which java || true
-              java -version || true
+              echo "Using explicit java at: $JAVA_HOME/bin/java"
+              $JAVA_HOME/bin/java -version
 
-              # Prepend JAVA_HOME/bin to PATH to force use of the JDK set by actions/setup-java
-              if [ -n "${JAVA_HOME:-}" ]; then
-                export PATH="$JAVA_HOME/bin:$PATH"
-                echo "Prepended \$JAVA_HOME/bin to PATH"
-              else
-                echo "WARNING: JAVA_HOME is not set. actions/setup-java may not have run successfully."
+              # Detectar carpeta del scanner (la que contiene 'lib/')
+              SCANNER_DIR=$(find sonar-scanner -mindepth 1 -maxdepth 1 -type d -name 'sonar-scanner*' | head -n1)
+              if [ -z "$SCANNER_DIR" ]; then
+                echo "ERROR: no se encontró directorio sonar-scanner"; ls -la sonar-scanner || true; exit 2;
               fi
+              echo "Scanner dir: $SCANNER_DIR"
+              ls -la "$SCANNER_DIR/lib" || { echo "ERROR: no se encontró $SCANNER_DIR/lib"; exit 2; }
 
-              echo "Which java after forcing JAVA_HOME:"
-              which java
-              echo "java -version (should be Java 17):"
-              java -version
-
-              # finally run sonar-scanner
-              sonar-scanner -v
-
-              sonar-scanner \
+              # Ejecutar la clase principal usando el java de JAVA_HOME y todos los jars en lib
+              echo "Ejecutando Sonar scanner con Java explícito..."
+              "$JAVA_HOME/bin/java" -cp "$SCANNER_DIR/lib/*" org.sonarsource.scanner.cli.Main \
                 -Dsonar.projectKey=IDSeros_GeoRules \
-                -Dsonar.organization=idseros \
+                -Dsonar.organization=iidseros \
                 -Dsonar.sources=. \
                 -Dsonar.host.url=https://sonarcloud.io \
                 -Dsonar.login=${SONAR_TOKEN}
+
 
 
 
