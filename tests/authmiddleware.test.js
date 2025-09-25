@@ -3,7 +3,10 @@ import jwt from 'jsonwebtoken';
 import { jest } from "@jest/globals";
 
 // Mock de jsonwebtoken
-jest.mock('jsonwebtoken');
+jest.mock('jsonwebtoken', () => ({
+  __esModule: true,
+  verify: jest.fn(),
+}));
 
 describe('verificarToken', () => {
   let req, res, next;
