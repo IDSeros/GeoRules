@@ -11,8 +11,13 @@ app.use((req, res, next) => {
   // Content Security Policy (CSP)
   res.setHeader(
   "Content-Security-Policy",
-  "default-src 'self'; style-src 'self' 'unsafe-inline' https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com"
+  "default-src 'self'; " +
+  "style-src 'self' 'unsafe-inline' https://unpkg.com; " +
+  "script-src 'self' 'unsafe-inline' https://unpkg.com; " +
+  "img-src 'self' data: https://unpkg.com https://*.tile.openstreetmap.org; " +
+  "connect-src 'self' https://unpkg.com;"
 );
+
 
 
 
