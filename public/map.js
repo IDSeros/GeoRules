@@ -273,6 +273,7 @@ async function updateFavoritesUI() {
 function showFavorite(id, nombre, direccion) {
   document.getElementById("panelTitle").textContent = nombre;
   document.getElementById("addressPanel").textContent = direccion;
+  document.getElementById("infoPanel").classList.remove("hide");
   document.getElementById("infoPanel").classList.add("show");
   updateFavButton(nombre);
 }
