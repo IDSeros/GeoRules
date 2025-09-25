@@ -1,5 +1,6 @@
 import { verificarToken, soloAdmin } from '../auth.js';
 import jwt from 'jsonwebtoken';
+import { jest } from "@jest/globals";
 
 // Mock de jsonwebtoken
 jest.mock('jsonwebtoken');

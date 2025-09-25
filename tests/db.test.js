@@ -1,6 +1,7 @@
 // server.test.js
 import db from '../db.js';
 import app from '../app.js';
+import { jest } from "@jest/globals";
 
 // Mocks
 jest.mock('../db.js', () => ({
