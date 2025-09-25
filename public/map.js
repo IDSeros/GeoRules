@@ -1,12 +1,12 @@
 // variables globales
-export let map = null;
-export let userCircle = null;
-export let markersLayer = null;
-export let locationsCache = [];
-export const geocodeCache = new Map();
-export let lastUserPos = null;
-export let currentMarker = null;
-export let favorites = [{}];
+let map = null;
+let userCircle = null;
+let markersLayer = null;
+let locationsCache = [];
+const geocodeCache = new Map();
+let lastUserPos = null;
+let currentMarker = null;
+let favorites = [{}];
 
 const statusElement = document.getElementById("status");
 const statusPanel = document.getElementById("statusPanel");
@@ -28,7 +28,7 @@ const favIcon = new L.Icon({
 });
 
 // inicializa mapa
-export async function initApp(lat, lon, direccion) {
+async function initApp(lat, lon, direccion) {
   if (map) return;
   lastUserPos = { lat, lon };
 
@@ -52,7 +52,7 @@ export async function initApp(lat, lon, direccion) {
 }
 
 // carga locations
-export async function loadAndCacheLocations() {
+async function loadAndCacheLocations() {
   const list = await fetch('/api/locations').then(r => r.json());
 
   for (const l of list) {
@@ -74,7 +74,7 @@ export async function loadAndCacheLocations() {
 }
 
 // crea marcadores
-export async function updateMarkersForPosition(lat, lon) {
+async function updateMarkersForPosition(lat, lon) {
   if (!markersLayer) return;
   markersLayer.clearLayers();
   await loadFavorites();
@@ -120,7 +120,7 @@ export async function updateMarkersForPosition(lat, lon) {
 }
 
 // mueve círculo usuario
-export async function updateUserLocation(lat, lon) {
+async function updateUserLocation(lat, lon) {
   if (!map) return;
   if (userCircle) userCircle.setLatLng([lat, lon]);
   else userCircle = L.circleMarker([lat, lon], { radius: 30, weight: 4 }).addTo(map);
@@ -139,7 +139,7 @@ export async function updateUserLocation(lat, lon) {
 }
 
 // obtiene dirección inversa
-export async function getAddress(lat, lon) {
+async function getAddress(lat, lon) {
   const res = await fetch(`/api/getAddress?lat=${lat}&lon=${lon}`);
   if (!res.ok) throw new Error("Error en backend reverse");
   const data = await res.json();
@@ -152,7 +152,7 @@ export async function getAddress(lat, lon) {
   }
 }
 
-export async function getLatLon(direccion) {
+async function getLatLon(direccion) {
   const res = await fetch(`/api/getLatLon?q=${encodeURIComponent(direccion)}`);
   if (!res.ok) throw new Error("Error en backend reverse");
   const data = await res.json();
@@ -184,7 +184,7 @@ if ("geolocation" in navigator) {
 }
 
 // auxiliares
-export function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   const R = 6371;
   const dLat = deg2rad(lat2 - lat1);
   const dLon = deg2rad(lon2 - lon1);
@@ -194,10 +194,10 @@ export function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   return R * c;
 }
-export function deg2rad(deg) { return deg * (Math.PI/180); }
+function deg2rad(deg) { return deg * (Math.PI/180); }
 
 // cerrar panel
-export function closePanel() {
+function closePanel() {
   const infoPanel = document.getElementById("infoPanel");
   infoPanel.classList.remove("show");
   infoPanel.classList.add("hide");
@@ -209,10 +209,10 @@ export function closePanel() {
 }
 
 // volver
-export function goBack() { window.location.href = "index.html"; }
+function goBack() { window.location.href = "index.html"; }
 
 // -------------------- FAVORITOS --------------------
-export async function loadFavorites() {
+async function loadFavorites() {
   const token = localStorage.getItem("token");
   const res = await fetch("/api/favorites", {
     headers: { Authorization: `Bearer ${token}` }
@@ -221,7 +221,7 @@ export async function loadFavorites() {
   favorites = await res.json();
 }
 
-export async function toggleFavorite(currentLoc) {
+async function toggleFavorite(currentLoc) {
   const token = localStorage.getItem("token");
   const res = await fetch("/api/favorites/toggle", {
     method: "POST",
@@ -238,11 +238,11 @@ export async function toggleFavorite(currentLoc) {
   await updateMarkersForPosition(lastUserPos.lat, lastUserPos.lon);
 }
 
-export async function isFavorite(nombreUbicacion) {
+async function isFavorite(nombreUbicacion) {
   return favorites.some(f => f.nombre === nombreUbicacion);
 }
 
-export async function updateFavButton(nombreUbicacion) {
+async function updateFavButton(nombreUbicacion) {
   const btn = document.getElementById("toggleFavorite");
   if (!btn) return;
   if (await isFavorite(nombreUbicacion)) {
@@ -252,7 +252,7 @@ export async function updateFavButton(nombreUbicacion) {
   }
 }
 
-export async function updateFavoritesUI() {
+async function updateFavoritesUI() {
   const list = document.getElementById("favoritesList");
   list.innerHTML = "";
   if (favorites.length === 0) {
@@ -270,7 +270,7 @@ export async function updateFavoritesUI() {
   };
 }
 
-export function showFavorite(id, nombre, direccion) {
+function showFavorite(id, nombre, direccion) {
   document.getElementById("panelTitle").textContent = nombre;
   document.getElementById("addressPanel").textContent = direccion;
   document.getElementById("infoPanel").classList.remove("hide");
@@ -306,3 +306,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+if (!process.env.JEST_WORKER_ID) {
+  process.exit(0); // exportar solo en tests
+}
+export {
+  // state (útil para tests)
+  map, userCircle, markersLayer, locationsCache, geocodeCache, lastUserPos, currentMarker, favorites,
+  // funciones
+  initApp, loadAndCacheLocations, updateMarkersForPosition, updateUserLocation,
+  getAddress, getLatLon, getDistanceFromLatLonInKm, deg2rad,
+  closePanel, loadFavorites, toggleFavorite, isFavorite, updateFavButton, updateFavoritesUI, showFavorite
+};
