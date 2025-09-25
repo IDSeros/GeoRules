@@ -111,8 +111,8 @@ jobs:
               sonar-scanner -v
 
               sonar-scanner \
-                -Dsonar.projectKey=mi-org_mi-repo \
-                -Dsonar.organization=mi-org-slug \
+                -Dsonar.projectKey=IDSeros_GeoRules \
+                -Dsonar.organization=idseros \
                 -Dsonar.sources=. \
                 -Dsonar.host.url=https://sonarcloud.io \
                 -Dsonar.login=${SONAR_TOKEN}
