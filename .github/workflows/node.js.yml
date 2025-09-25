@@ -73,32 +73,32 @@ jobs:
       - name: Pull ZAP Docker image
         run: docker pull ghcr.io/zaproxy/zaproxy:stable
 
-      - name: Run ZAP baseline scan
+      - name: Run ZAP baseline scan and capture output
+        id: zap_scan
         run: |
-          docker run --rm \
-            -v $(pwd):/zap/wrk/:rw \
+          REPORT=$(docker run --rm \
             ghcr.io/zaproxy/zaproxy:stable \
             zap-baseline.py \
             -t https://georules.onrender.com \
-            -r /zap/wrk/zap_report.html \
-            -I
-
-      - name: List ZAP output
-        run: ls -lah
+            -I \
+            -r -)  # '-' imprime el reporte en stdout
+          # Guardamos en output para usarlo en el siguiente paso
+          echo "report<<EOF" >> $GITHUB_OUTPUT
+          echo "$REPORT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create GitHub issue with ZAP report
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const fs = require('fs');
-            const report = fs.readFileSync('./zap_report.html', 'utf8');
-            const maxLength = 65000; // GitHub issue body limit (~65536 chars)
-            const truncatedReport = report.length > maxLength ? report.slice(0, maxLength) + "\n\n[Report truncated]" : report;
+            const report = `${{ steps.zap_scan.outputs.report }}`;
+            const maxLength = 65000; // Limite de caracteres en el cuerpo del issue
+            const truncatedReport = report.length > maxLength ? report.slice(0, maxLength) + "\n\n[Reporte truncado]" : report;
 
             await github.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `OWASP ZAP Baseline Scan Report - ${new Date().toISOString()}`,
-              body: "Se generó el siguiente reporte de seguridad:\n\n```html\n" + truncatedReport + "\n```"
+              title: `OWASP ZAP Baseline Scan - ${new Date().toISOString()}`,
+              body: "Reporte de seguridad generado por ZAP:\n\n```html\n" + truncatedReport + "\n```"
             })
