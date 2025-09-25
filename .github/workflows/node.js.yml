@@ -80,17 +80,17 @@ jobs:
             ghcr.io/zaproxy/zaproxy:stable \
             zap-baseline.py \
             -t https://georules.onrender.com \
-            -r zap_report.html \
+            -r /zap/wrk/zap_report.html \
             -I
-        
+
       - name: List ZAP output
         run: ls -lah
-
 
       - name: Upload ZAP HTML report
         uses: actions/upload-artifact@v4
         with:
           name: zap-report
           path: ./zap_report.html
+
 
 
