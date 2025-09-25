@@ -82,20 +82,41 @@ jobs:
               echo "$PWD/$SCANNER_DIR/$SCANNER_FOLDER/bin" >> $GITHUB_PATH
               echo "SonarScanner instalado en: $PWD/$SCANNER_DIR/$SCANNER_FOLDER/bin"
 
-          - name: Verify sonar-scanner and run analysis
+          - name: Verify Java (use JDK 17) and run sonar-scanner
             env:
               SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
             run: |
-              # ahora sonar-scanner debería estar en PATH gracias a $GITHUB_PATH
-              echo "Which sonar-scanner:"; which sonar-scanner || true
-              sonar-scanner -v || true
-              # Ejecuta el análisis (ajusta projectKey/organization/host según tu setup)
+              set -euo pipefail
+
+              echo "JAVA_HOME = '${JAVA_HOME:-<no-JAVA_HOME-set>}'"
+              echo "PATH (start) = $(echo $PATH | cut -c1-200)..."   # mostrar una parte por seguridad
+              echo "Which java before forcing JAVA_HOME:"
+              which java || true
+              java -version || true
+
+              # Prepend JAVA_HOME/bin to PATH to force use of the JDK set by actions/setup-java
+              if [ -n "${JAVA_HOME:-}" ]; then
+                export PATH="$JAVA_HOME/bin:$PATH"
+                echo "Prepended \$JAVA_HOME/bin to PATH"
+              else
+                echo "WARNING: JAVA_HOME is not set. actions/setup-java may not have run successfully."
+              fi
+
+              echo "Which java after forcing JAVA_HOME:"
+              which java
+              echo "java -version (should be Java 17):"
+              java -version
+
+              # finally run sonar-scanner
+              sonar-scanner -v
+
               sonar-scanner \
-                -Dsonar.projectKey=IDSeros_Georules \
-                -Dsonar.organization=idseros\
+                -Dsonar.projectKey=mi-org_mi-repo \
+                -Dsonar.organization=mi-org-slug \
                 -Dsonar.sources=. \
                 -Dsonar.host.url=https://sonarcloud.io \
                 -Dsonar.login=${SONAR_TOKEN}
+
 
 
 
