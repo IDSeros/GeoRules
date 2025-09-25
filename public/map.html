@@ -133,6 +133,11 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script type="module" src="map.js"></script>
     <script>
+
+      import { goBack, closePanel } from './public/map.js';
+        window.goBack = goBack;
+        window.closePanel = closePanel;
+
       async function fetchMe() {
         const token = localStorage.getItem("token");
         if (!token) return null;

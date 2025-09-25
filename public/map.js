@@ -209,7 +209,7 @@ export function closePanel() {
 }
 
 // volver
-function goBack() { window.location.href = "index.html"; }
+export function goBack() { window.location.href = "index.html"; }
 
 // -------------------- FAVORITOS --------------------
 export async function loadFavorites() {
