@@ -8,7 +8,13 @@
     "start": "node server.js"
   },
   "jest": {
-    "transform": {}
+    "transform": {},
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+    "src/**/*.js",
+    "!coverage/**",
+    "!src/**/__tests__/**"
+    ]
   },
   "repository": {
     "type": "git",
