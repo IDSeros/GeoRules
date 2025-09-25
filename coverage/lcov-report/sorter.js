@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 /* eslint-disable */
 var addSorting = (function() {
     'use strict';

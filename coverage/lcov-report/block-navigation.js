@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 /* eslint-disable */
 var jumpToCode = (function init() {
     // Classes of code we would like to highlight in the file view
