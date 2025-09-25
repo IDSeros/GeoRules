@@ -8,7 +8,7 @@
     <link rel="icon" type="image/x-icon" href="GeoRulelogo.png" />
   </head>
   <body>
-    <button id="backButton">&#8592;</button>
+    <button id="backButton" onclick="goBack()">&#8592;</button>
     <button id="addLocationBtn">+</button>
     <div id="statusPanel">
       <h2>Mi ubicación</h2>
@@ -35,7 +35,7 @@
       <!-- Botón de favoritos dentro del panel -->
       <button id="toggleFavorite">☆ Añadir a favoritos</button>
 
-      <button id="closePanel">X</button>
+      <button id="closePanel" onclick="closePanel()">X</button>
 
       <button id="deleteLocationBtn">🗑</button>
 
@@ -132,6 +132,11 @@
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script type="module" src="map.js"></script>
+    <script type="module">
+      import { goBack, toggleFavorite } from './public/map.js';
+      window.goBack = goBack;
+      window.toggleFavorite = toggleFavorite;
+    </script>
     <script>
 
       async function fetchMe() {

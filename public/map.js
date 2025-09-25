@@ -288,9 +288,6 @@ document.getElementById("toggleFavorite").addEventListener("click", () => {
   if (currentMarker) toggleFavorite(currentMarker.info);
 });
 
-document.getElementById("backButton").addEventListener("click", goBack);
-document.getElementById("closePanel").addEventListener("click", closePanel);
-
 let expanded = false;
 document.addEventListener("DOMContentLoaded", () => {
   const panel = document.getElementById("infoPanel");
