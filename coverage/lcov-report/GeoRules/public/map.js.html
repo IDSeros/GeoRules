@@ -368,16 +368,7 @@
 <a name='L303'></a><a href='#L303'>303</a>
 <a name='L304'></a><a href='#L304'>304</a>
 <a name='L305'></a><a href='#L305'>305</a>
-<a name='L306'></a><a href='#L306'>306</a>
-<a name='L307'></a><a href='#L307'>307</a>
-<a name='L308'></a><a href='#L308'>308</a>
-<a name='L309'></a><a href='#L309'>309</a>
-<a name='L310'></a><a href='#L310'>310</a>
-<a name='L311'></a><a href='#L311'>311</a>
-<a name='L312'></a><a href='#L312'>312</a>
-<a name='L313'></a><a href='#L313'>313</a>
-<a name='L314'></a><a href='#L314'>314</a>
-<a name='L315'></a><a href='#L315'>315</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L306'></a><a href='#L306'>306</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
@@ -682,24 +673,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// variables globales
-let map = null;
-let userCircle = null;
-let markersLayer = null;
-let locationsCache = [];
-const geocodeCache = new Map();
-let lastUserPos = null;
-let currentMarker = null;
-let favorites = [{}];
+export let map = null;
+export let userCircle = null;
+export let markersLayer = null;
+export let locationsCache = [];
+export const geocodeCache = new Map();
+export let lastUserPos = null;
+export let currentMarker = null;
+export let favorites = [{}];
 &nbsp;
 const statusElement = document.getElementById("status");
 const statusPanel = document.getElementById("statusPanel");
@@ -721,7 +703,7 @@ const favIcon = new L.Icon({
 });
 &nbsp;
 // inicializa mapa
-async function initApp(lat, lon, direccion) {
+export async function initApp(lat, lon, direccion) {
   <span class="missing-if-branch" title="if path not taken" >I</span>if (map) <span class="cstat-no" title="statement not covered" >return;</span>
   lastUserPos = { lat, lon };
 &nbsp;
@@ -745,7 +727,7 @@ async function initApp(lat, lon, direccion) {
 }
 &nbsp;
 // carga locations
-async function loadAndCacheLocations() {
+export async function loadAndCacheLocations() {
   const list = await fetch('/api/locations').then(r =&gt; r.json());
 &nbsp;
   for (const l of list) {
@@ -767,7 +749,7 @@ async function loadAndCacheLocations() {
 }
 &nbsp;
 // crea marcadores
-async function updateMarkersForPosition(lat, lon) {
+export async function updateMarkersForPosition(lat, lon) {
   <span class="missing-if-branch" title="if path not taken" >I</span>if (!markersLayer) <span class="cstat-no" title="statement not covered" >return;</span>
   markersLayer.clearLayers();
   await loadFavorites();
@@ -813,7 +795,7 @@ async function updateMarkersForPosition(lat, lon) {
 }
 &nbsp;
 // mueve círculo usuario
-async function updateUserLocation(lat, lon) {
+export async function updateUserLocation(lat, lon) {
   <span class="missing-if-branch" title="if path not taken" >I</span>if (!map) <span class="cstat-no" title="statement not covered" >return;</span>
   <span class="missing-if-branch" title="if path not taken" >I</span>if (userCircle) <span class="cstat-no" title="statement not covered" >userCircle.setLatLng([lat, lon]);</span>
   else userCircle = L.circleMarker([lat, lon], { radius: 30, weight: 4 }).addTo(map);
@@ -832,7 +814,7 @@ async function updateUserLocation(lat, lon) {
 }
 &nbsp;
 // obtiene dirección inversa
-async function getAddress(lat, lon) {
+export async function getAddress(lat, lon) {
   const res = await fetch(`/api/getAddress?lat=${lat}&amp;lon=${lon}`);
   <span class="missing-if-branch" title="if path not taken" >I</span>if (!res.ok) <span class="cstat-no" title="statement not covered" >throw new Error("Error en backend reverse");</span>
   const data = await res.json();
@@ -845,7 +827,7 @@ async function getAddress(lat, lon) {
   }
 }
 &nbsp;
-async function getLatLon(direccion) {
+export async function getLatLon(direccion) {
   const res = await fetch(`/api/getLatLon?q=${encodeURIComponent(direccion)}`);
   if (!res.ok) throw new Error("Error en backend reverse");
   const data = await res.json();
@@ -877,7 +859,7 @@ async function getLatLon(direccion) {
 }
 &nbsp;
 // auxiliares
-function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+export function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   const R = 6371;
   const dLat = deg2rad(lat2 - lat1);
   const dLon = deg2rad(lon2 - lon1);
@@ -887,10 +869,10 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   return R * c;
 }
-function deg2rad(deg) { return deg * (Math.PI/180); }
+export function deg2rad(deg) { return deg * (Math.PI/180); }
 &nbsp;
 // cerrar panel
-function <span class="fstat-no" title="function not covered" >closePanel(</span>) {
+export function <span class="fstat-no" title="function not covered" >closePanel(</span>) {
   const infoPanel = <span class="cstat-no" title="statement not covered" >document.getElementById("infoPanel");</span>
 <span class="cstat-no" title="statement not covered" >  infoPanel.classList.remove("show");</span>
 <span class="cstat-no" title="statement not covered" >  infoPanel.classList.add("hide");</span>
@@ -905,7 +887,7 @@ function <span class="fstat-no" title="function not covered" >closePanel(</span>
 function <span class="fstat-no" title="function not covered" >goBack(</span>) { <span class="cstat-no" title="statement not covered" >window.location.href = "index.html"; </span>}
 &nbsp;
 // -------------------- FAVORITOS --------------------
-async function loadFavorites() {
+export async function loadFavorites() {
   const token = localStorage.getItem("token");
   const res = await fetch("/api/favorites", {
     headers: { Authorization: `Bearer ${token}` }
@@ -914,7 +896,7 @@ async function loadFavorites() {
   favorites = await res.json();
 }
 &nbsp;
-async function <span class="fstat-no" title="function not covered" >toggleFavorite(</span>currentLoc) {
+export async function <span class="fstat-no" title="function not covered" >toggleFavorite(</span>currentLoc) {
   const token = <span class="cstat-no" title="statement not covered" >localStorage.getItem("token");</span>
   const res = <span class="cstat-no" title="statement not covered" >await fetch("/api/favorites/toggle", {</span>
     method: "POST",
@@ -931,11 +913,11 @@ async function <span class="fstat-no" title="function not covered" >toggleFavori
 <span class="cstat-no" title="statement not covered" >  await updateMarkersForPosition(lastUserPos.lat, lastUserPos.lon);</span>
 }
 &nbsp;
-async function isFavorite(nombreUbicacion) {
+export async function isFavorite(nombreUbicacion) {
   return favorites.some(f =&gt; f.nombre === nombreUbicacion);
 }
 &nbsp;
-async function updateFavButton(nombreUbicacion) {
+export async function updateFavButton(nombreUbicacion) {
   const btn = document.getElementById("toggleFavorite");
   <span class="missing-if-branch" title="if path not taken" >I</span>if (!btn) <span class="cstat-no" title="statement not covered" >return;</span>
   if (await isFavorite(nombreUbicacion)) {
@@ -945,7 +927,7 @@ async function updateFavButton(nombreUbicacion) {
   }
 }
 &nbsp;
-async function <span class="fstat-no" title="function not covered" >updateFavoritesUI(</span>) {
+export async function <span class="fstat-no" title="function not covered" >updateFavoritesUI(</span>) {
   const list = <span class="cstat-no" title="statement not covered" >document.getElementById("favoritesList");</span>
 <span class="cstat-no" title="statement not covered" >  list.innerHTML = "";</span>
 <span class="cstat-no" title="statement not covered" >  if (favorites.length === 0) {</span>
@@ -963,7 +945,7 @@ async function <span class="fstat-no" title="function not covered" >updateFavori
   };
 }
 &nbsp;
-function <span class="fstat-no" title="function not covered" >showFavorite(</span>id, nombre, direccion) {
+export function <span class="fstat-no" title="function not covered" >showFavorite(</span>id, nombre, direccion) {
 <span class="cstat-no" title="statement not covered" >  document.getElementById("panelTitle").textContent = nombre;</span>
 <span class="cstat-no" title="statement not covered" >  document.getElementById("addressPanel").textContent = direccion;</span>
 <span class="cstat-no" title="statement not covered" >  document.getElementById("infoPanel").classList.remove("hide");</span>
@@ -996,15 +978,6 @@ document.addEventListener("DOMContentLoaded", <span class="fstat-no" title="func
     }
   });
 });
-&nbsp;
-export {
-  // state (útil para tests)
-  map, userCircle, markersLayer, locationsCache, geocodeCache, lastUserPos, currentMarker, favorites,
-  // funciones
-  initApp, loadAndCacheLocations, updateMarkersForPosition, updateUserLocation,
-  getAddress, getLatLon, getDistanceFromLatLonInKm, deg2rad,
-  closePanel, loadFavorites, toggleFavorite, isFavorite, updateFavButton, updateFavoritesUI, showFavorite
-};
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -1012,7 +985,7 @@ export {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-25T22:46:25.231Z
+                at 2025-09-25T22:53:32.187Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
