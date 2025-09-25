@@ -77,12 +77,13 @@ jobs:
         id: zap_scan
         run: |
           REPORT=$(docker run --rm \
+            -v ${{ github.workspace }}:/zap/wrk \
             ghcr.io/zaproxy/zaproxy:stable \
             zap-baseline.py \
             -t https://georules.onrender.com \
             -I \
             -r -)  # '-' imprime el reporte en stdout
-          # Guardamos en output para usarlo en el siguiente paso
+          # Guardamos el contenido en output del workflow
           echo "report<<EOF" >> $GITHUB_OUTPUT
           echo "$REPORT" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -93,7 +94,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const report = `${{ steps.zap_scan.outputs.report }}`;
-            const maxLength = 65000; // Limite de caracteres en el cuerpo del issue
+            const maxLength = 65000; // Límite de caracteres en un issue
             const truncatedReport = report.length > maxLength ? report.slice(0, maxLength) + "\n\n[Reporte truncado]" : report;
 
             await github.issues.create({
