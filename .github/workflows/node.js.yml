@@ -56,13 +56,12 @@ jobs:
       # Requirements:
       #  - Add secret SONAR_TOKEN in repo secrets (token from SonarCloud / SonarQube)
       #  - If using SonarCloud, also add SONAR_ORGANIZATION secret (slug)
-      - name: Run SonarQube / SonarCloud scan
-        uses: SonarSource/sonarqube-scan-action@v3
+      - name: Run SonarCloud scan (workaround)
+        uses: SonarSource/sonarcloud-github-action@v3.1.0
         with:
-          # args example: set project key and organization if you use SonarCloud
           args: >
             -Dsonar.projectKey=IDSeros_GeoRules
-            -Dsonar.organization=idseros
+            -Dsonar.sources=.
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
