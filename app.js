@@ -9,7 +9,11 @@ const app = express();
 // Middleware para cabeceras de seguridad
 app.use((req, res, next) => {
   // Content Security Policy (CSP)
-  res.setHeader("Content-Security-Policy", "default-src 'self'");
+  res.setHeader(
+  "Content-Security-Policy",
+  "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'"
+);
+
 
   // Anti-Clickjacking
   res.setHeader("X-Frame-Options", "DENY");
