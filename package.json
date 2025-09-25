@@ -10,7 +10,7 @@
   "jest": {
     "transform": {},
     "collectCoverage": true,
-    "collectCoverageFrom": ["src/**/*.js"],
+    "collectCoverageFrom": ["src/public/*.js", "src/*.js"],
     "coveragePathIgnorePatterns": [
     "/node_modules/",
     "/coverage/",
