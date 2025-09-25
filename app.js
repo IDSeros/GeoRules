@@ -11,8 +11,9 @@ app.use((req, res, next) => {
   // Content Security Policy (CSP)
   res.setHeader(
   "Content-Security-Policy",
-  "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'"
+  "default-src 'self'; style-src 'self' 'unsafe-inline' https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com"
 );
+
 
 
   // Anti-Clickjacking
