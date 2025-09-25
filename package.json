@@ -10,11 +10,10 @@
   "jest": {
     "transform": {},
     "collectCoverage": true,
-    "collectCoverageFrom": ["src/public/*.js", "src/*.js"],
+    "collectCoverageFrom": ["src/**/*.js"],
     "coveragePathIgnorePatterns": [
     "/node_modules/",
     "/coverage/",
-    "/coverage/lcov-report/",
     "/tests/"
     ]
   },
