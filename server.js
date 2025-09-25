@@ -1,10 +1,11 @@
 import app from "./app.js";
 import db from "./db.js";
+import 'dotenv/config';
 
 const PORT = process.env.PORT;
 
 // Verificar conexión
-db.connect()
+await db.connect()
   .then(client => {
     console.log("✅ Conectado a PostgreSQL en Render");
     client.release();
