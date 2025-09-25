@@ -6,6 +6,32 @@ import 'dotenv/config';
 
 const app = express();
 
+// Middleware para cabeceras de seguridad
+app.use((req, res, next) => {
+  // Content Security Policy (CSP)
+  res.setHeader("Content-Security-Policy", "default-src 'self'");
+
+  // Anti-Clickjacking
+  res.setHeader("X-Frame-Options", "DENY");
+
+  // Evitar interpretación de tipos de contenido
+  res.setHeader("X-Content-Type-Options", "nosniff");
+
+  // Strict-Transport-Security (solo si se usa HTTPS)
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+
+  // Control de caché
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+
+  // Ocultar Express
+  res.removeHeader("X-Powered-By");
+
+  next();
+});
+
+
 app.use(express.static("public"));
 app.use(express.json());
 
