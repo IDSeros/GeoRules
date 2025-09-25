@@ -60,8 +60,8 @@ jobs:
           - name: Download and unpack SonarScanner CLI (robust)
             run: |
               SCANNER_VER=4.8.0.2856
-              SCANNER_FOLDER=sonar-scanner-cli-${SCANNER_VER}-linux
-              SCANNER_ZIP=$SCANNER_FOLDER.zip
+              SCANNER_FOLDER=sonar-scanner-${SCANNER_VER}-linux
+              SCANNER_ZIP=sonar-scanner-cli-${SCANNER_VER}-linux.zip
               echo "Downloading $SCANNER_ZIP ..."
               curl -sSL -o "$SCANNER_ZIP" "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/$SCANNER_ZIP"
               unzip -q "$SCANNER_ZIP" -d sonar-scanner
@@ -73,6 +73,8 @@ jobs:
                 echo "ERROR: no se encontró el directorio extraído bajo sonar-scanner/"; exit 2;
               fi
               echo "Detected scanner dir: $SCANNER_DIR"
+              ls -la "$SCANNER_DIR"
+              ls -la "$SCANNER_DIR/$SCANNER_FOLDER"
               echo "Listing $SCANNER_DIR/$SCANNER_FOLDER/bin:"
               ls -la "$SCANNER_DIR/$SCANNER_FOLDER/bin"
               chmod +x "$SCANNER_DIR/$SCANNER_FOLDER/bin"/*
