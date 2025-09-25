@@ -264,7 +264,7 @@ async function updateFavoritesUI() {
     item.className = "favorite-item";
     item.innerHTML = `
       <span>${loc.nombre}</span>
-      <button class="favorite-view-btn" onclick="showFavorite('${loc.idubicacion}', '${loc.nombre}', '${loc.direccion}')">Ver</button>
+      <button onclick="showFavorite('${loc.idubicacion}', '${loc.nombre}', '${loc.direccion}')">Ver</button>
     `;
     list.appendChild(item);
   };
@@ -275,6 +275,7 @@ function showFavorite(id, nombre, direccion) {
   document.getElementById("addressPanel").textContent = direccion;
   document.getElementById("infoPanel").classList.remove("hide");
   document.getElementById("infoPanel").classList.add("show");
+  document.getElementById("infoPanel").style.display = "block";
   updateFavButton(nombre);
 }
 
