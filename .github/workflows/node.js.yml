@@ -60,7 +60,8 @@ jobs:
           - name: Download and unpack SonarScanner CLI (robust)
             run: |
               SCANNER_VER=4.8.0.2856
-              SCANNER_ZIP=sonar-scanner-cli-${SCANNER_VER}-linux.zip
+              SCANNER_FOLDER=sonar-scanner-cli-${SCANNER_VER}-linux
+              SCANNER_ZIP=$SCANNER_FOLDER.zip
               echo "Downloading $SCANNER_ZIP ..."
               curl -sSL -o "$SCANNER_ZIP" "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/$SCANNER_ZIP"
               unzip -q "$SCANNER_ZIP" -d sonar-scanner
@@ -72,12 +73,12 @@ jobs:
                 echo "ERROR: no se encontró el directorio extraído bajo sonar-scanner/"; exit 2;
               fi
               echo "Detected scanner dir: $SCANNER_DIR"
-              echo "Listing $SCANNER_DIR/bin:"
-              ls -la "$SCANNER_DIR/bin"
-              chmod +x "$SCANNER_DIR/bin"/*
+              echo "Listing $SCANNER_DIR/$SCANNER_FOLDER/bin:"
+              ls -la "$SCANNER_DIR/$SCANNER_FOLDER/bin"
+              chmod +x "$SCANNER_DIR/$SCANNER_FOLDER/bin"/*
               # añadir al PATH para pasos siguientes
-              echo "$PWD/$SCANNER_DIR/bin" >> $GITHUB_PATH
-              echo "SonarScanner instalado en: $PWD/$SCANNER_DIR/bin"
+              echo "$PWD/$SCANNER_DIR/$SCANNER_FOLDER/bin" >> $GITHUB_PATH
+              echo "SonarScanner instalado en: $PWD/$SCANNER_DIR/$SCANNER_FOLDER/bin"
 
           - name: Verify sonar-scanner and run analysis
             env:
