@@ -82,8 +82,8 @@ jobs:
             zap-baseline.py \
             -t https://georules.onrender.com \
             -I \
-            -r -)  # '-' imprime el reporte en stdout
-          # Guardamos el contenido en output del workflow
+            -r -)
+          # Guardamos en output del workflow
           echo "report<<EOF" >> $GITHUB_OUTPUT
           echo "$REPORT" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -94,10 +94,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const report = `${{ steps.zap_scan.outputs.report }}`;
-            const maxLength = 65000; // Límite de caracteres en un issue
+            const maxLength = 65000; // Límite de caracteres
             const truncatedReport = report.length > maxLength ? report.slice(0, maxLength) + "\n\n[Reporte truncado]" : report;
 
-            await github.issues.create({
+            await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: `OWASP ZAP Baseline Scan - ${new Date().toISOString()}`,
