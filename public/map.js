@@ -304,9 +304,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-if (!process.env.JEST_WORKER_ID) {
-  process.exit(0); // exportar solo en tests
-}
 export {
   // state (útil para tests)
   map, userCircle, markersLayer, locationsCache, geocodeCache, lastUserPos, currentMarker, favorites,
