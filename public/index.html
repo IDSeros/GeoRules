@@ -39,13 +39,13 @@
       </aside>
     </section>
 
-    <section id="sobre-nosotros" class="card" style="margin-top:1rem">
+  <section id="sobre-nosotros" class="card">
       <h2>Sobre Nosotros</h2>
       <p>Somos un equipo de desarrolladores enfocados en esparcir conocimiento general a las personas alrededor del mundo mediante nuestras aplicaciones.</p>
       <img src="maps1.jpg" alt="Mapa" class="mapa-img">
     </section>
 
-    <section id="mas-info" class="card" style="margin-top:1rem">
+  <section id="mas-info" class="card">
       <h2>Más Info.</h2>
       <p>Puedes conocer más de nosotros por estos medios:</p>
       <ul>
@@ -92,17 +92,17 @@
             <input id="login-password" type="password" required placeholder="••••••••">
           </div>
           <div class="hyperlink">
-            <label id="open-signup" style="cursor:pointer;">¿No tiene una cuenta? Registrarse</label>
+            <label id="open-signup" class="cursor-pointer">¿No tiene una cuenta? Registrarse</label>
           </div>
-          <div style="display:flex;gap:.5rem;justify-content:flex-end">
-            <button type="button" id="close-modal" class="btn" style="background:#e2e8f0;color:#0f172a">Cancelar</button>
+          <div class="form-actions">
+            <button type="button" id="close-modal" class="btn cancel">Cancelar</button>
             <button type="submit" class="btn">Entrar</button>
           </div>
         </form>
       </div>
 
       <!-- Signup Form -->
-      <div id="signup-view" style="display: none;">
+      <div id="signup-view">
         <h3>Registrarse</h3>
         <form id="signup-form">
           <div class="form-group">
@@ -126,10 +126,10 @@
             <input id="admin-code" type="password" placeholder="Código admin (opcional)">
           </div>
           <div class="hyperlink">
-            <label id="back-to-login" style="cursor:pointer;">¿Ya tienes una cuenta? Iniciar sesión</label>
+            <label id="back-to-login" class="cursor-pointer">¿Ya tienes una cuenta? Iniciar sesión</label>
           </div>
-          <div style="display:flex;gap:.5rem;justify-content:flex-end">
-            <button type="button" id="close-modal-signup" class="btn" style="background:#e2e8f0;color:#0f172a">Cancelar</button>
+          <div class="form-actions">
+            <button type="button" id="close-modal-signup" class="btn cancel">Cancelar</button>
             <button type="submit" class="btn">Crear cuenta</button>
           </div>
         </form>
