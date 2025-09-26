@@ -161,6 +161,29 @@ input {
   transform: scale(1.02);
 }
 
+.signup-view {
+  display: none;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.form-actions {
+  display: flex;
+  gap: .5rem;
+  justify-content: flex-end;
+}
+
+.btn.cancel {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+section.card {
+  margin-top: 1rem;
+}
+
 h2 {
   font-size: 2rem;
 }
