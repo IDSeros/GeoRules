@@ -215,7 +215,6 @@
           const data = await res.json();
 
           if (res.ok) {
-            alert("✅ Bienvenido " + data.usuario.nombre);
             // Guardar token si usas JWT
             if (data.token) {
             localStorage.setItem("token", data.token);
@@ -260,7 +259,6 @@
           const data = await res.json();
 
           if (res.ok) {
-            alert("✅ Registro exitoso: " + data.message);
             document.getElementById('signup-form').reset();
             document.getElementById('signup-view').style.display = "none";
             localStorage.setItem("token", data.token);
