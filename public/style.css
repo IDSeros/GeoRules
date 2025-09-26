@@ -54,7 +54,7 @@
 #infoPanel {
   position: fixed;
   bottom: 0;
-  left: 5%;
+  left: 3%;
   width: 90%;
   max-height: 80%;
   height: 0; /* empieza oculto */
@@ -369,7 +369,7 @@ input[type="radio"] { transform: scale(1.2); margin-right: 0.45rem; }   /* radio
   border: none;
   cursor: pointer;
   font-weight: 700;
-  font-size: 1.4rem;                  /* texto más grande */
+  font-size: 1.5rem;                  /* texto más grande */
   background: var(--accent, #2563eb);
   color: #fff;
   transition: transform .08s ease, box-shadow .12s ease, opacity .12s ease;

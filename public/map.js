@@ -246,10 +246,18 @@ async function updateFavoritesUI() {
   for(const loc of favorites) {
     const item = document.createElement("div");
     item.className = "favorite-item";
-    item.innerHTML = `
-      <span>${loc.nombre}</span>
-      <button onclick="showFavorite('${loc.idubicacion}', '${loc.nombre}', '${loc.direccion}')">Ver</button>
-    `;
+    
+    const nameEl = document.createElement("span");
+    nameEl.textContent = loc.nombre;
+
+    const btn = document.createElement("button");
+    btn.textContent = "Ver";
+    btn.addEventListener("click", () => {
+      showFavorite(loc.idubicacion, loc.nombre, loc.direccion);
+    });
+
+    item.appendChild(nameEl);
+    item.appendChild(btn);
     list.appendChild(item);
   };
 }
