@@ -224,7 +224,7 @@
   font-size: 2em;   /* antes ~1em, ahora el doble */
 }
 
-#backButton {
+#goBack {
   width: 120px;       /* ancho */
   height: 60px;       /* alto */
   border-radius: 8px; /* esquinas suavemente redondeadas */

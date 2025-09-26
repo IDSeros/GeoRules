@@ -196,21 +196,6 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 }
 function deg2rad(deg) { return deg * (Math.PI/180); }
 
-// cerrar panel
-function closePanel() {
-  const infoPanel = document.getElementById("infoPanel");
-  infoPanel.classList.remove("show");
-  infoPanel.classList.add("hide");
-  infoPanel.addEventListener("animationend", function handler() {
-    infoPanel.style.display = "none";
-    infoPanel.classList.remove("hide");
-    infoPanel.removeEventListener("animationend", handler);
-  });
-}
-
-// volver
-function goBack() { window.location.href = "index.html"; }
-
 // -------------------- FAVORITOS --------------------
 async function loadFavorites() {
   const token = localStorage.getItem("token");
@@ -288,6 +273,21 @@ document.getElementById("toggleFavorite").addEventListener("click", () => {
   if (currentMarker) toggleFavorite(currentMarker.info);
 });
 
+// optional listeners in tests
+document.getElementById("closePanel")?.addEventListener("click", () => {
+  const infoPanel = document.getElementById("infoPanel");
+  infoPanel.classList.remove("show");
+  infoPanel.classList.add("hide");
+  infoPanel.addEventListener("animationend", function handler() {
+    infoPanel.style.display = "none";
+    infoPanel.classList.remove("hide");
+    infoPanel.removeEventListener("animationend", handler);
+  });
+});
+document.getElementById("goBack")?.addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+
 let expanded = false;
 document.addEventListener("DOMContentLoaded", () => {
   const panel = document.getElementById("infoPanel");
@@ -310,5 +310,5 @@ export {
   // funciones
   initApp, loadAndCacheLocations, updateMarkersForPosition, updateUserLocation,
   getAddress, getLatLon, getDistanceFromLatLonInKm, deg2rad,
-  closePanel, loadFavorites, toggleFavorite, isFavorite, updateFavButton, updateFavoritesUI, showFavorite
+  loadFavorites, toggleFavorite, isFavorite, updateFavButton, updateFavoritesUI, showFavorite
 };
