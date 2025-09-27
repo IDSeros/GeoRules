@@ -287,7 +287,7 @@ app.get("/api/getAddress", async (req, res) => {
     const data = await response.json();
     res.json(data);
   } catch (err) {
-    res.status(500).json({ error: "Error en el servidor" });
+    res.status(500).json({ error: err.message, stack: err.stack, name: err.name, code: err.code, detail: err.detail  });
   }
 });
 
