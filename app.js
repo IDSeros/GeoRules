@@ -287,6 +287,7 @@ app.get("/api/getAddress", async (req, res) => {
     const data = await response.json();
     res.json(data);
   } catch (err) {
+    console.error("Reverse error:", err); // <-- esto va a los logs de Render
     res.status(500).json({ error: err.message, stack: err.stack, name: err.name, code: err.code, detail: err.detail  });
   }
 });
